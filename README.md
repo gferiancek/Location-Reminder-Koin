@@ -4,8 +4,8 @@ Project # 2: Build an Asteroid Radar app using NASA's NeoWs API
 Main of this project is on properly implementing MVVM Architecture. (ViewModel, Repository, Network, and Database)
 
 ## 1. Basic setup to prepare for the rest of the project
-- [ ] Create NeoListFragment, NeoDetails Fragment, and ViewModels for each.
-- [ ] TextView in XML Layouts for basic data validation testing in later sections.
+- [x] Create NeoListFragment, NeoDetails Fragment, and ViewModels for each.
+- [x] TextView in XML Layouts for basic data validation testing in later sections.
 
 ## 2. Make Retrofit call to NeoWs API
 - [ ] Setup Retrofit Service to call to NeoWs API.  Take the received JSON and display it in TextView to verify call is successful.
