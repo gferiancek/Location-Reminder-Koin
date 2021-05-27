@@ -36,3 +36,5 @@ Will likely need to review WorkerManager since we didn't have much practice with
 - [ ] Use WorkerManager to download the data once per day, and only if charging/connected to wifi.
 - [ ] Extra Credit: Have the same WorkerManager also delete Neo objects from before the current day. (If it is 5/25, then all Neo objects in the database from 5/24 or earlier should be deleted.)
 
+## 7. TalkBack
+- [ ] Test project and ensure it works with TalkBack accesibility.
