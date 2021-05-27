@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">NeoRadar</string>
+    <string name="data_unchaged">No data has been loaded into the TextView</string>
 </resources>
