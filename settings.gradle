@@ -1,0 +1,2 @@
+rootProject.name = "NeoRadar"
+include ':app'
