@@ -8,10 +8,10 @@ Main of this project is on properly implementing MVVM Architecture. (ViewModel, 
 - [x] TextView in XML Layouts for basic data validation testing in later sections.
 
 ## 2. Make Retrofit call to NeoWs API
-- [ ] Setup Retrofit Service to call to NeoWs API.  Take the received JSON and display it in TextView to verify call is successful.
-- [ ] Create a NeoDTO (Data Transfer Object) and add extension functions to map to database Entity and a Domain data classes.
-- [ ] Parse JSON and map it to NeoDTO. Modify Retrofit call to return a list of NeoDTO objects.
-- [ ] Print contents of list to TextView to verify parsing has been implemented successfully.
+- [x] Setup Retrofit Service to call to NeoWs API.  Take the received JSON and display it in TextView to verify call is successful.
+- [x] Create a NeoDTO (Data Transfer Object)
+- [x] Parse JSON and map it to NeoDTO. Modify Retrofit call to return a list of NeoDTO objects.
+- [x] Print contents of list to TextView to verify parsing has been implemented successfully.
 
 ## 3. Setup our NeoDatabase.
 - [ ] Implement synchronized(lock) to make sure we only ever have one instance of our database.
