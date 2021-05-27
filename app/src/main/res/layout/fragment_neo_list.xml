@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="neoListViewModel"
+            type="com.example.neoradar.viewmodel.NeoListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,9 +15,10 @@
         tools:context=".ui.NeoListFragment">
 
         <TextView
+            android:id="@+id/test_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/data_unchaged"
+            android:text="@{neoListViewModel.neoList.toString()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
