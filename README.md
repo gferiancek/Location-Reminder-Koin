@@ -1,7 +1,7 @@
 # AKND
-Project # 1: Build a Shoe Store App
+Project # 2: Build an Asteroid Radar app using NASA's NeoWs API
 =======
-Main focus of this project is on properly implementing Jetpack Navigation Components and using a ViewModel + LiveData to add new information to the screen and update accordingly.
+Main of this project is on properly implementing MVVM Architecture. (ViewModel, Repository, Network, and Database)
 
 ## 1. Basic setup to prepare for the rest of the project
 - [ ] Create NeoListFragment, NeoDetails Fragment, and ViewModels for each.
