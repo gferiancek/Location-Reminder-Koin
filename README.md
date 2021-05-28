@@ -14,17 +14,17 @@ Main of this project is on properly implementing MVVM Architecture. (ViewModel, 
 - [x] Print contents of list to TextView to verify parsing has been implemented successfully.
 
 ## 3. Setup our NeoDatabase.
-- [ ] Implement synchronized(lock) to make sure we only ever have one instance of our database.
-- [ ] Create NeoDAO and implement required methods for accessing and writing to the database.
-  - [ ] add(varargs), getAll(). (Might be all we need since we're using LiveData that gets automatically updated. May add more as needed)
-- [ ] Create NeoEntity data class with extension function to convert to Domain data class.
-- [ ] Instead of displaying Retrofit data to the TextView, map it to NeoEntity and then save it into the database
-- [ ] Observe LiveData returned by getAll() and ensure we can read from the database by printint contents to TextView.
+- [x] Implement synchronized(lock) to make sure we only ever have one instance of our database.
+- [x] Create NeoDAO and implement required methods for accessing and writing to the database.
+  - [x] add(varargs), getAll(). (Might be all we need since we're using LiveData that gets automatically updated. May add more as needed)
+- [x] Create NeoEntity data class with extension function to convert to Domain data class.
+- [x] Instead of displaying Retrofit data to the TextView, map it to NeoEntity and then save it into the database
+- [x] Observe LiveData returned by getAll() and ensure we can read from the database by printint contents to TextView.
 
 ## 4. Setup our NeoRepository.
-- [ ] Move Retrofit and database code into Repository.
-- [ ] Pass LiveData from database to ViewModel so we always see some data.
-- [ ] Include refreshData method so that we can refresh the data on app startup so the user is always getting new content.
+- [x] Move Retrofit and database code into Repository.
+- [x] Pass LiveData from database to ViewModel so we always see some data.
+- [x] Include refreshData method so that we can refresh the data on app startup so the user is always getting new content.
 
 ## 5. Expand UI
 - [ ] Start fleshing out UI so that we display a list of the data with a RecyclerView.
