@@ -1,7 +1,5 @@
 package com.example.neoradar.network
 
-import kotlinx.coroutines.Deferred
-import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
@@ -15,11 +13,16 @@ interface NasaApiService {
     suspend fun getPictureOfTheDay(@Query("api_key") api_key: String)
 }
 
+/**
+ * Since version 2.6.0 Retrofit has built in support for suspend functions, so we no longer need to add
+ * the CoroutineCallAdapterFactory in our RetrofitBuilder.  It also allows us to use a suspend fun instead
+ * of a Deferred<Type> in the above NasaApiService @GET functions.
+ */
 object NasaApi {
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl("https://api.nasa.gov/")
         .addConverterFactory(ScalarsConverterFactory.create())
         .build()
 
-    val nasaRetrofit = retrofit.create(NasaApiService::class.java)
+    val nasaRetrofit: NasaApiService = retrofit.create(NasaApiService::class.java)
 }
