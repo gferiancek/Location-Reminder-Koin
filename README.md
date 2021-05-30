@@ -27,14 +27,14 @@ Main of this project is on properly implementing MVVM Architecture. (ViewModel, 
 - [x] Include refreshData method so that we can refresh the data on app startup so the user is always getting new content.
 
 ## 5. Expand UI
-- [ ] Start fleshing out UI so that we display a list of the data with a RecyclerView.
-- [ ] Add a clickListener to list items so that we can navigate to the Details Screen for each individual item.
-  - [ ] Decide whether we'll pass the object or just the id to call from Database. (Probably object)
+- [x] Start fleshing out UI so that we display a list of the data with a RecyclerView.
+- [x] Add a clickListener to list items so that we can navigate to the Details Screen for each individual item.
+  - [x] Decide whether we'll pass the object or just the id to call from Database. (Probably object)
 
 ## 6. WorkerManager
 Will likely need to review WorkerManager since we didn't have much practice with it.  Will update checklist as more becomes apparent.
-- [ ] Use WorkerManager to download the data once per day, and only if charging/connected to wifi.
-- [ ] Extra Credit: Have the same WorkerManager also delete Neo objects from before the current day. (If it is 5/25, then all Neo objects in the database from 5/24 or earlier should be deleted.)
+- [x] Use WorkerManager to download the data once per day, and only if charging/connected to wifi.
+- [x] Extra Credit: Have the same WorkerManager also delete Neo objects from before the current day. (If it is 5/25, then all Neo objects in the database from 5/24 or earlier should be deleted.)
 
 ## 7. TalkBack
-- [ ] Test project and ensure it works with TalkBack accesibility.
+- [x] Test project and ensure it works with TalkBack accesibility.
