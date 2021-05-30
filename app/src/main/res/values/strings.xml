@@ -18,6 +18,8 @@
     <string name="no_data">No internet connection and no data stored in the local cache.  Please check
     your connection and restart the app.\n\n(Note: After this initial load, new data will be fetched in
     the background and only when the device is charging and connected to wifi).</string>
-    <string name="potentially_hazardous_content_description">This Neo is potentially hazardous.  Image depicts a Neo smashing into Earth.</string>
-    <string name="not_hazardous_content_description">This Neo is not potentially hazardous.  Image depicts Earth as safe.</string>
+    <string name="detail_hazardous_content_description">Image depicts a Neo smashing into Earth. Neo is</string>
+    <string name="detail_not_hazardous_content_description">Image depicts Earth as safe. Neo is</string>
+    <string name="list_hazardous_content_description">This Neo is potentially hazardous.</string>
+    <string name="list_not_hazardous_content_description">This Neo is not hazardous.</string>
 </resources>

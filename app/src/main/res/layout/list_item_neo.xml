@@ -28,12 +28,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <!-- Content Description is set using custom attribute since it is variable -->
             <ImageView
                 android:id="@+id/neo_list_hazardous_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_normal"
                 app:setHazardIcon="@{currentNeo}"
+                app:setContentDescription="@{currentNeo}"
                 app:layout_constraintBottom_toTopOf="@+id/neo_list_distance"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"
