@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">NeoRadar</string>
+    <string name="app_name">Neo Radar</string>
     <string name="data_unchanged">No data has been loaded into the TextView</string>
     <string name="neo_list_distance">%1$f au from Earth</string>
-    <string name="au_description">The stronomical unit (au) is a unit of length, roughly the distance
+    <string name="au_description">The astronomical unit (au) is a unit of length, roughly the distance
     from Earth to the Sun and equal to about 150 million kilometers (93 million miles).</string>
     <string name="image_of_the_day">Image of the Day</string>
     <string name="is_potentially_hazardous">Potentially Hazardous</string>
@@ -18,4 +18,6 @@
     <string name="no_data">No internet connection and no data stored in the local cache.  Please check
     your connection and restart the app.\n\n(Note: After this initial load, new data will be fetched in
     the background and only when the device is charging and connected to wifi).</string>
+    <string name="potentially_hazardous_content_description">This Neo is potentially hazardous.  Image depicts a Neo smashing into Earth.</string>
+    <string name="not_hazardous_content_description">This Neo is not potentially hazardous.  Image depicts Earth as safe.</string>
 </resources>

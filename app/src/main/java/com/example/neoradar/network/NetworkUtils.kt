@@ -12,9 +12,9 @@ fun parseNeoJsonResult(jsonResult: JSONObject): ArrayList<NeoDTO> {
 
     val nextSevenDaysFormattedDates = getNextSevenDaysFormattedDates()
     for (formattedDate in nextSevenDaysFormattedDates) {
-        val dateAsteroidJsonArray = neoJson.getJSONArray(formattedDate)
+        val dateAsteroidJsonArray = neoJson.optJSONArray(formattedDate)
 
-        for (i in 0 until dateAsteroidJsonArray.length()) {
+        for (i in 0 until dateAsteroidJsonArray!!.length()) {
             val asteroidJson = dateAsteroidJsonArray.getJSONObject(i)
             val id = asteroidJson.getLong("id")
             val codename = asteroidJson.getString("name")
@@ -31,9 +31,11 @@ fun parseNeoJsonResult(jsonResult: JSONObject): ArrayList<NeoDTO> {
             val isPotentiallyHazardous = asteroidJson
                 .getBoolean("is_potentially_hazardous_asteroid")
 
-            val asteroid = NeoDTO(id, codename, formattedDate, absoluteMagnitude,
-                estimatedDiameter, relativeVelocity, distanceFromEarth, isPotentiallyHazardous)
-            neoList.add(asteroid)
+            val neo = NeoDTO(
+                id, codename, formattedDate, absoluteMagnitude,
+                estimatedDiameter, relativeVelocity, distanceFromEarth, isPotentiallyHazardous
+            )
+            neoList.add(neo)
         }
     }
     return neoList
@@ -44,12 +46,20 @@ private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
 
     val calendar = Calendar.getInstance()
     for (i in 0..ApiConstants.DEFAULT_END_DATE_DAYS) {
-        val currentTime = calendar.time
-        val dateFormat = SimpleDateFormat(ApiConstants.API_QUERY_DATE_FORMAT, Locale.getDefault())
-        formattedDateList.add(dateFormat.format(currentTime))
+        formattedDateList.add(calculateCurrentDate(calendar))
         calendar.add(Calendar.DAY_OF_YEAR, 1)
     }
     return formattedDateList
+}
+
+/**
+ * Calculating the date is needed in a couple places in the app, such as setting the start date for
+ * the NeoWS api call.  Figured it'd be easier to put it in a function here for reuse.
+ */
+fun calculateCurrentDate(calendar: Calendar): String {
+    val currentTime = calendar.time
+    val dateFormat = SimpleDateFormat(ApiConstants.API_QUERY_DATE_FORMAT, Locale.getDefault())
+    return dateFormat.format(currentTime)
 }
 
 object ApiConstants {

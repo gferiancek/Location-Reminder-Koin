@@ -25,7 +25,7 @@ data class NeoEntity(
     val isPotentiallyHazardous: Boolean
 )
 
-fun List<NeoEntity>.asDomainModel() : List<Neo> {
+fun List<NeoEntity>.asDomainModel(): List<Neo> {
     return map {
         Neo(
             name = it.name,
@@ -34,6 +34,7 @@ fun List<NeoEntity>.asDomainModel() : List<Neo> {
             estimatedDiameter = it.estimatedDiameter,
             relativeVelocity = it.relativeVelocity,
             distanceFromEarth = it.distanceFromEarth,
-            isPotentiallyHazardous = it.isPotentiallyHazardous)
+            isPotentiallyHazardous = it.isPotentiallyHazardous
+        )
     }
 }

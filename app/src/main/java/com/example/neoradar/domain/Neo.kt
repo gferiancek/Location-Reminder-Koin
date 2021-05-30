@@ -1,7 +1,8 @@
 package com.example.neoradar.domain
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Neo(
@@ -11,4 +12,5 @@ data class Neo(
     val estimatedDiameter: Double,
     val relativeVelocity: Double,
     val distanceFromEarth: Double,
-    val isPotentiallyHazardous: Boolean): Parcelable
+    val isPotentiallyHazardous: Boolean,
+) : Parcelable

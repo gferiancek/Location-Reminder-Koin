@@ -10,7 +10,8 @@ data class NeoDTO(
     val estimatedDiameter: Double,
     val relativeVelocity: Double,
     val distanceFromEarth: Double,
-    val isPotentiallyHazardous: Boolean)
+    val isPotentiallyHazardous: Boolean
+)
 
 fun List<NeoDTO>.asDatabaseModel(): Array<NeoEntity> {
     return map {
@@ -22,6 +23,7 @@ fun List<NeoDTO>.asDatabaseModel(): Array<NeoEntity> {
             estimatedDiameter = it.estimatedDiameter,
             relativeVelocity = it.relativeVelocity,
             distanceFromEarth = it.distanceFromEarth,
-            isPotentiallyHazardous = it.isPotentiallyHazardous)
+            isPotentiallyHazardous = it.isPotentiallyHazardous
+        )
     }.toTypedArray()
 }

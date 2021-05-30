@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
             name="currentNeo"
             type="com.example.neoradar.domain.Neo" />
@@ -16,11 +17,11 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_marginEnd="@dimen/margin_normal"
         app:cardBackgroundColor="@color/card_background"
-        app:cardCornerRadius="10dp"
+        app:cardCornerRadius="@dimen/card_corner_radius"
         android:onClick="@{() -> clickListener.onClick(currentNeo)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,7 +32,7 @@
                 android:id="@+id/neo_list_hazardous_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="@dimen/margin_normal"
                 app:setHazardIcon="@{currentNeo}"
                 app:layout_constraintBottom_toTopOf="@+id/neo_list_distance"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -42,11 +43,10 @@
                 android:id="@+id/neo_list_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginTop="@dimen/margin_small"
                 android:text="@{currentNeo.name}"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                android:textColor="@color/white"
                 app:layout_constraintBottom_toTopOf="@+id/neo_list_approach_date"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -57,11 +57,10 @@
                 android:id="@+id/neo_list_approach_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginBottom="@dimen/margin_small"
                 android:text="@{currentNeo.closeApproachDate}"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/neo_list_name"
@@ -72,7 +71,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                android:textColor="@color/white"
                 app:distanceFromEarth="@{currentNeo}"
                 app:layout_constraintBottom_toBottomOf="@+id/neo_list_approach_date"
                 app:layout_constraintEnd_toEndOf="@+id/neo_list_hazardous_icon"

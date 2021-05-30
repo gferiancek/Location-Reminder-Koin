@@ -107,3 +107,13 @@ fun setUiStatus(view: View, apiStatus: NeoApiStatus?) {
         }
     }
 }
+
+@BindingAdapter("setContentDescription")
+fun ImageView.setContentDescription(item: Neo?) {
+    item?.let {
+        contentDescription =  when (item.isPotentiallyHazardous) {
+            true -> resources.getString(R.string.potentially_hazardous_content_description)
+            false -> resources.getString(R.string.not_hazardous_content_description)
+        }
+    }
+}

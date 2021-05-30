@@ -1,6 +1,5 @@
 package com.example.neoradar.network
 
-import com.example.neoradar.domain.ImageOfTheDay
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -11,7 +10,10 @@ import retrofit2.http.Query
 
 interface NasaApiService {
     @GET("neo/rest/v1/feed")
-    suspend fun getNeoJsonResult(@Query("api_key") apiKey: String, @Query("start_date") startDate: String): String
+    suspend fun getNeoJsonResult(
+        @Query("api_key") apiKey: String,
+        @Query("start_date") startDate: String
+    ): String
 
     @GET("planetary/apod")
     suspend fun getPictureOfTheDay(@Query("api_key") apiKey: String): ImageOfTheDayDTO

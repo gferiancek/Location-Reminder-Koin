@@ -1,13 +1,14 @@
 package com.example.neoradar.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.*
-import com.example.neoradar.database.asDomainModel
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.neoradar.database.getDatabase
 import com.example.neoradar.domain.Neo
 import com.example.neoradar.repository.NeoRepository
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 enum class NeoApiStatus { LOADING, DONE, ERROR }
 
@@ -25,6 +26,10 @@ class NeoListViewModel(application: Application) : AndroidViewModel(application)
     private val _status = MutableLiveData<NeoApiStatus>()
     val status: LiveData<NeoApiStatus>
         get() = _status
+
+    init {
+        _status.value = NeoApiStatus.LOADING
+    }
 
     /**
      * Function to set the UiState for the app.  If neoList.isNullOrEmpty, then we force a call

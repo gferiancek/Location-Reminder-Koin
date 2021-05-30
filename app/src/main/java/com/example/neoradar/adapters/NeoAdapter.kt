@@ -13,9 +13,11 @@ import com.example.neoradar.domain.Neo
  * adding items to the top.  I did want to practice the pattern though, since it was knew knowledge
  * that I had never applied to a RecyclerView before.  Figured it won't really hurt the app to include it.
  */
-class NeoAdapter(private val clickListener: NeoListener): ListAdapter<Neo, NeoAdapter.NeoViewHolder>(NeoDiffCallback()) {
+class NeoAdapter(private val clickListener: NeoListener) :
+    ListAdapter<Neo, NeoAdapter.NeoViewHolder>(NeoDiffCallback()) {
 
-    class NeoViewHolder private constructor(private val binding: ListItemNeoBinding): RecyclerView.ViewHolder(binding.root) {
+    class NeoViewHolder private constructor(private val binding: ListItemNeoBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Neo, clickListener: NeoListener) {
             binding.currentNeo = item
             binding.clickListener = clickListener
@@ -25,7 +27,8 @@ class NeoAdapter(private val clickListener: NeoListener): ListAdapter<Neo, NeoAd
         companion object {
             fun from(parent: ViewGroup): NeoViewHolder {
                 val binding = ListItemNeoBinding.inflate(
-                    LayoutInflater.from(parent.context), parent, false)
+                    LayoutInflater.from(parent.context), parent, false
+                )
                 return NeoViewHolder(binding)
             }
         }
@@ -42,9 +45,9 @@ class NeoAdapter(private val clickListener: NeoListener): ListAdapter<Neo, NeoAd
     }
 }
 
-class NeoDiffCallback: DiffUtil.ItemCallback<Neo>() {
+class NeoDiffCallback : DiffUtil.ItemCallback<Neo>() {
     override fun areItemsTheSame(oldItem: Neo, newItem: Neo): Boolean {
-        return oldItem.name == newItem.name
+        return oldItem.closeApproachDate == newItem.closeApproachDate
     }
 
     override fun areContentsTheSame(oldItem: Neo, newItem: Neo): Boolean {
