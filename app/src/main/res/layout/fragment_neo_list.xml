@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="neoListViewModel"
             type="com.example.neoradar.viewmodel.NeoListViewModel" />
@@ -14,15 +15,85 @@
         android:layout_height="match_parent"
         tools:context=".ui.NeoListFragment">
 
-        <TextView
-            android:id="@+id/test_textview"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:uiStatus="@{neoListViewModel.status}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
+
+            <ImageView
+                android:id="@+id/image_of_the_day"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/background"
+                android:contentDescription="@{neoListViewModel.imageOfTheDay.contentDescription}"
+                app:imageOfTheDay="@{neoListViewModel.imageOfTheDay}"
+                app:layout_constraintBottom_toTopOf="@+id/list_horizontal_40"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@drawable/ic_placeholder_of_the_day" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background_alpha"
+                android:includeFontPadding="false"
+                android:padding="@dimen/padding_normal"
+                android:text="@string/image_of_the_day"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/list_horizontal_40"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/list_horizontal_40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent=".4" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/neo_list_rv"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/background"
+                android:paddingBottom="4dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_of_the_day"
+                app:neoListData="@{neoListViewModel.neoList}"
+                tools:listitem="@layout/list_item_neo">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{neoListViewModel.neoList.toString()}"
+            app:uiStatus="@{neoListViewModel.status}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_normal"
+            android:gravity="center"
+            app:uiStatus="@{neoListViewModel.status}"
+            android:text="@string/no_data"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -8,15 +8,26 @@
     <fragment
         android:id="@+id/neoListFragment"
         android:name="com.example.neoradar.ui.NeoListFragment"
-        android:label="fragment_neo_list"
-        tools:layout="@layout/fragment_neo_list" >
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_neo_list">
         <action
             android:id="@+id/action_neoListFragment_to_neoDetailFragment"
-            app:destination="@id/neoDetailFragment" />
+            app:destination="@id/neoDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/neoDetailFragment"
         android:name="com.example.neoradar.ui.NeoDetailFragment"
-        android:label="fragment_neo_detail"
-        tools:layout="@layout/fragment_neo_detail" />
+        android:label="{currentNeoName}"
+        tools:layout="@layout/fragment_neo_detail">
+        <argument
+            android:name="currentNeo"
+            app:argType="com.example.neoradar.domain.Neo" />
+        <argument
+            android:name="currentNeoName"
+            app:argType="string" />
+    </fragment>
 </navigation>

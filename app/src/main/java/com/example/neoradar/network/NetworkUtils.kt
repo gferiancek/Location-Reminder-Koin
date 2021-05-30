@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-const val DEFAULT_END_DATE_DAYS = 7
-const val API_QUERY_DATE_FORMAT = "yyyy-MM-dd"
 fun parseNeoJsonResult(jsonResult: JSONObject): ArrayList<NeoDTO> {
     val neoJson = jsonResult.getJSONObject("near_earth_objects")
 
@@ -45,11 +43,16 @@ private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
     val formattedDateList = ArrayList<String>()
 
     val calendar = Calendar.getInstance()
-    for (i in 0..DEFAULT_END_DATE_DAYS) {
+    for (i in 0..ApiConstants.DEFAULT_END_DATE_DAYS) {
         val currentTime = calendar.time
-        val dateFormat = SimpleDateFormat(API_QUERY_DATE_FORMAT, Locale.getDefault())
+        val dateFormat = SimpleDateFormat(ApiConstants.API_QUERY_DATE_FORMAT, Locale.getDefault())
         formattedDateList.add(dateFormat.format(currentTime))
         calendar.add(Calendar.DAY_OF_YEAR, 1)
     }
     return formattedDateList
+}
+
+object ApiConstants {
+    const val DEFAULT_END_DATE_DAYS = 7
+    const val API_QUERY_DATE_FORMAT = "yyyy-MM-dd"
 }

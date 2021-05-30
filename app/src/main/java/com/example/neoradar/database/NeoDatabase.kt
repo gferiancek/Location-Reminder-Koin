@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [NeoEntity::class], version = 1, exportSchema = false)
+@Database(entities = [NeoEntity::class, ImageOfTheDayEntity::class], version = 1, exportSchema = false)
 abstract class NeoDatabase: RoomDatabase() {
     abstract val neoDao: NeoDao
 }

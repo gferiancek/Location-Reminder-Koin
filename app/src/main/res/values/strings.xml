@@ -1,4 +1,21 @@
 <resources>
     <string name="app_name">NeoRadar</string>
     <string name="data_unchanged">No data has been loaded into the TextView</string>
+    <string name="neo_list_distance">%1$f au from Earth</string>
+    <string name="au_description">The stronomical unit (au) is a unit of length, roughly the distance
+    from Earth to the Sun and equal to about 150 million kilometers (93 million miles).</string>
+    <string name="image_of_the_day">Image of the Day</string>
+    <string name="is_potentially_hazardous">Potentially Hazardous</string>
+    <string name="not_hazardous">Not Hazardous</string>
+    <string name="close_approach_date">Close Approach Date</string>
+    <string name="absolute_magnitude">Absolute Magnitude</string>
+    <string name="estimated_diameter">Estimated Diameter</string>
+    <string name="relative_velocity">Relative Velocity</string>
+    <string name="distance_from_earth">Distance From Earth</string>
+    <string name="add_au">%1$f au</string>
+    <string name="add_km">%1$f km</string>
+    <string name="add_kms">%1$f km/s</string>
+    <string name="no_data">No internet connection and no data stored in the local cache.  Please check
+    your connection and restart the app.\n\n(Note: After this initial load, new data will be fetched in
+    the background and only when the device is charging and connected to wifi).</string>
 </resources>

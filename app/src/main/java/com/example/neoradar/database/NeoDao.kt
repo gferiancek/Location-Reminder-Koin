@@ -9,8 +9,14 @@ import androidx.room.Query
 @Dao
 interface NeoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(vararg neos: NeoEntity)
+    suspend fun insertAllNeos(vararg neos: NeoEntity)
 
-    @Query("SELECT * FROM neo_radar_table")
+    @Query("SELECT * FROM neo_radar_table ORDER BY close_approach_date ASC")
     fun getAllNeos(): LiveData<List<NeoEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertImageOfTheDay(imageOfTheDayEntity: ImageOfTheDayEntity)
+
+    @Query("SELECT * FROM image_of_the_day LIMIT 1")
+    fun getImageOfTheDay(): LiveData<ImageOfTheDayEntity?>
 }
