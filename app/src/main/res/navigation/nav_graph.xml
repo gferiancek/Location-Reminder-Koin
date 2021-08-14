@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/remindersListFragment">
 
     <fragment
         android:id="@+id/remindersListFragment"
-        android:name="com.example.locationreminder.presentation.ui.reminders_list.RemindersListFragment"
-        android:label="RemindersListFragment" />
+        android:name="com.example.locationreminder.presentation.ui.reminders.reminders_list.RemindersListFragment"
+        android:label="Location Reminder">
+        <action
+            android:id="@+id/action_remindersListFragment_to_editReminderFragment"
+            app:destination="@id/editReminderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editReminderFragment"
+        android:name="com.example.locationreminder.presentation.ui.reminders.reminders_edit.EditReminderFragment"
+        android:label="Edit Reminder"
+        tools:layout="@layout/fragment_edit_reminder" />
 </navigation>
