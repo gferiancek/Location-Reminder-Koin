@@ -15,7 +15,16 @@
     </fragment>
     <fragment
         android:id="@+id/editReminderFragment"
-        android:name="com.example.locationreminder.presentation.ui.reminders.reminders_edit.EditReminderFragment"
+        android:name="com.example.locationreminder.presentation.ui.reminders.reminders_edit.ReminderEditFragment"
         android:label="Edit Reminder"
-        tools:layout="@layout/fragment_edit_reminder" />
+        tools:layout="@layout/fragment_reminder_edit">
+        <action
+            android:id="@+id/action_editReminderFragment_to_remindersListFragment"
+            app:destination="@id/remindersListFragment"
+            app:popUpTo="@id/remindersListFragment" />
+        <argument
+            android:name="currentReminder"
+            app:argType="com.example.locationreminder.domain.Reminder"
+            app:nullable="true" />
+    </fragment>
 </navigation>

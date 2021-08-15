@@ -5,7 +5,8 @@
       <map>
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/activity_main.xml" value="0.5774358974358974" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_edit_reminder.xml" value="0.1" />
-        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_reminders_list.xml" value="0.5864583333333333" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_reminder_edit.xml" value="0.5774358974358974" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_reminders_list.xml" value="0.1" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/list_item_reminder.xml" value="0.5864583333333333" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/reminders_list_fragment.xml" value="0.5864583333333333" />
       </map>

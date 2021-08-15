@@ -2,4 +2,5 @@
 <resources>
     <dimen name="iv_reminders_no_data_height">72dp</dimen>
     <dimen name="margin_normal">16dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
 </resources>
