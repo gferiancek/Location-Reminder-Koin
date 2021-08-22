@@ -31,6 +31,10 @@ class ReminderEditViewModel @Inject constructor(
     val eventSuccess: MutableLiveData<Boolean>
         get() = _eventSuccess
 
+    fun displayNewSnackbar(message: String) {
+        _snackbarMessage.value = message
+    }
+
     fun onTriggerEvent(event: ReminderEditEvent) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -59,7 +63,7 @@ class ReminderEditViewModel @Inject constructor(
     private fun editReminder() {
         editReminderUseCase.execute(currentReminder).onEach { dataState ->
             dataState.data?.let {
-                _snackbarMessage.value = "Successfully updated ${it.title} reminder"
+                _snackbarMessage.value = "Successfully updated the ${it.title} reminder"
                 _eventSuccess.value = true
             }
 

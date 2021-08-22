@@ -12,5 +12,14 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+    </style>
+
+    <style name="ReminderFireBaseUI" parent="Theme.LocationReminder">
+        <item name="android:windowBackground">@drawable/map_background</item>
+        <!-- We have a blank fragment auto-launch into the AuthUI Activity, which causes flickering
+        and blinking on app startup/closure.  Adding these lines helps minimize the visual artifacts -->
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 </resources>

@@ -1,9 +1,7 @@
 package com.example.locationreminder.presentation.ui.reminders.reminders_list
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -12,6 +10,7 @@ import com.example.locationreminder.databinding.FragmentRemindersListBinding
 import com.example.locationreminder.domain.Reminder
 import com.example.locationreminder.presentation.adapters.ReminderAdapter
 import com.example.locationreminder.presentation.adapters.ReminderListener
+import com.firebase.ui.auth.AuthUI
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,14 +40,40 @@ class RemindersListFragment : androidx.fragment.app.Fragment() {
 
         remindersViewModel.navigateToEditScreen.observe(viewLifecycleOwner) { currentReminder ->
             currentReminder?.let {
+                val label =
+                    if (currentReminder.id == 0L) getString(R.string.label_add_reminder) else getString(
+                        R.string.label_edit_reminder
+                    )
                 findNavController().navigate(
                     RemindersListFragmentDirections.actionRemindersListFragmentToEditReminderFragment(
-                        currentReminder
+                        // We use Two-Way DataBinding in the Edit Screen, so we send a copy of the reminder.
+                        // If we don't, then any changes get written all the way back to the database, even
+                        // if the user clicks the back button to cancel editing the reminder.
+                        currentReminder.copy(),
+                        label
                     )
                 )
                 remindersViewModel.onNavigateToEditScreenFinished()
             }
         }
+        setHasOptionsMenu(true)
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_reminder_list, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.logout -> {
+                AuthUI.getInstance()
+                    .signOut(requireContext())
+                    .addOnCompleteListener {
+                        findNavController().navigate(RemindersListFragmentDirections.actionRemindersListFragmentToLoginFragment())
+                    }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

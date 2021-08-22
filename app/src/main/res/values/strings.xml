@@ -8,4 +8,9 @@
     <string name="reminder_title_hint">Title</string>
     <string name="reminder_description_hint">Description</string>
     <string name="fab_save">Save current reminder</string>
+    <string name="label_add_reminder">Add Reminder</string>
+    <string name="label_edit_reminder">Edit Reminder</string>
+    <string name="create_account_login">Create Account/Login</string>
+    <string name="login_welcome_message">Welcome to the Location Reminder app</string>
+    <string name="iv_login_content_description">App icon</string>
 </resources>

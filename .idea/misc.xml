@@ -3,12 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/drawable/ic_baseline_not_listed_location_24.xml" value="0.6026041666666667" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.6026041666666667" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/drawable/ic_location_black.xml" value="0.6026041666666667" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/drawable/ic_location_reminder.xml" value="0.1935185185185185" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/activity_main.xml" value="0.5774358974358974" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_edit_reminder.xml" value="0.1" />
-        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_reminder_edit.xml" value="0.5774358974358974" />
-        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_reminders_list.xml" value="0.1" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_login.xml" value="0.5635897435897436" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_reminder_edit.xml" value="0.1508828250401284" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_reminders_list.xml" value="0.5" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/list_item_reminder.xml" value="0.5864583333333333" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/reminders_list_fragment.xml" value="0.5864583333333333" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/menu/menu_reminder_list.xml" value="0.5864583333333333" />
       </map>
     </option>
   </component>

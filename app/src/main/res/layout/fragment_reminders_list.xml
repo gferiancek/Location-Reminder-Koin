@@ -13,7 +13,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/iv_reminders_no_data_height"
             android:contentDescription="@string/reminders_no_data_iv_content_description"
-            android:src="@drawable/ic_baseline_not_listed_location_24"
+            android:src="@drawable/ic_location_black"
             setContentVisibility="@{viewModel.remindersList}"
             app:layout_constraintBottom_toTopOf="@id/tv_reminders_no_data"
             app:layout_constraintEnd_toEndOf="@id/tv_reminders_no_data"
