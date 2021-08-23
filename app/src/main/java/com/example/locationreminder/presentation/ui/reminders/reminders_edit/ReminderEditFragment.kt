@@ -52,7 +52,7 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
         ActivityResultContracts.StartIntentSenderForResult()
     ) { activityResult ->
         if (activityResult.resultCode == RESULT_OK) {
-            enableOrRequestFineLocation()
+            enableOrRequestLocation()
         } else {
             editViewModel.displayNewSnackbar(getString(R.string.location_off_or_denied))
         }
@@ -62,11 +62,11 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
      * This launcher is called when the user has not approved fine location permissions, prompts them to
      * approve the permission, and acts based on their decision
      */
-    private val fineLocationLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            enableOrRequestFineLocation()
+    private val locationLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { results ->
+        if (results.all { it.value == true }) {
+            enableOrRequestLocation()
         } else {
             editViewModel.displayNewSnackbar(getString(R.string.location_off_or_denied))
         }
@@ -170,9 +170,8 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
 
     private fun createLocationRequest(): LocationRequest {
         return LocationRequest.create().apply {
-            interval = 10000
-            fastestInterval = 5000
-            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+            interval = 100
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
 
@@ -187,7 +186,7 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
         val task: Task<LocationSettingsResponse> =
             client.checkLocationSettings(locationRequestBuilder.build())
         task.addOnSuccessListener {
-            enableOrRequestFineLocation()
+            enableOrRequestLocation()
         }
         task.addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
@@ -201,13 +200,17 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
      * Checks if user has enabled the fine location permission.  If enabled, adds location capabilities
      * to our MapView. If disabled, starts launcher to request the permission.
      */
-    private fun enableOrRequestFineLocation() {
+    private fun enableOrRequestLocation() {
         val fineLocation = ContextCompat.checkSelfPermission(
             requireContext(),
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
-        when (fineLocation) {
+        val coarseLocation = ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        when (fineLocation && coarseLocation) {
             true -> {
                 map.isMyLocationEnabled = true
                 fusedLocationClient.lastLocation.addOnSuccessListener { location ->
@@ -224,7 +227,14 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
                     }
                 }
             }
-            false -> fineLocationLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            false -> {
+                locationLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                )
+            }
         }
     }
 
