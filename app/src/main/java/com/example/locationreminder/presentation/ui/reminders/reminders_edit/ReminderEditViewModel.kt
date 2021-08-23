@@ -21,7 +21,7 @@ class ReminderEditViewModel @Inject constructor(
     private val editReminderUseCase: EditReminderUseCase
 ) : ViewModel() {
 
-    lateinit var currentReminder: Reminder
+    var currentReminder: Reminder? = null
 
     private val _snackbarMessage = MutableLiveData<String>()
     val snackbarMessage: MutableLiveData<String>
@@ -48,30 +48,34 @@ class ReminderEditViewModel @Inject constructor(
     }
 
     private fun addReminder() {
-        addReminderUseCase.execute(currentReminder).onEach { dataState ->
-            dataState.data?.let {
-                _snackbarMessage.value = "Successfully added ${it.title} reminder"
-                _eventSuccess.value = true
-            }
-            dataState.error?.let {
-                _snackbarMessage.value = it
-                _eventSuccess.value = false
-            }
-        }.launchIn(viewModelScope)
+        currentReminder?.let {
+            addReminderUseCase.execute(it).onEach { dataState ->
+                dataState.data?.let {
+                    _snackbarMessage.value = "Successfully added ${it.title} reminder"
+                    _eventSuccess.value = true
+                }
+                dataState.error?.let {
+                    _snackbarMessage.value = it
+                    _eventSuccess.value = false
+                }
+            }.launchIn(viewModelScope)
+        }
     }
 
     private fun editReminder() {
-        editReminderUseCase.execute(currentReminder).onEach { dataState ->
-            dataState.data?.let {
-                _snackbarMessage.value = "Successfully updated the ${it.title} reminder"
-                _eventSuccess.value = true
-            }
+        currentReminder?.let {
+            editReminderUseCase.execute(it).onEach { dataState ->
+                dataState.data?.let {
+                    _snackbarMessage.value = "Successfully updated the ${it.title} reminder"
+                    _eventSuccess.value = true
+                }
 
-            dataState.error?.let {
-                _snackbarMessage.value = it
-                _eventSuccess.value = false
-            }
-        }.launchIn(viewModelScope)
+                dataState.error?.let {
+                    _snackbarMessage.value = it
+                    _eventSuccess.value = false
+                }
+            }.launchIn(viewModelScope)
+        }
     }
 
     private fun deleteReminder(id: Long) {

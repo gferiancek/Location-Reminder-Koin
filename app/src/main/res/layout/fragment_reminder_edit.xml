@@ -21,7 +21,8 @@
             android:imeOptions="actionNext"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:text="@={currentReminder.title}"
+            android:importantForAutofill="no"
+            android:text="@={viewModel.currentReminder.title}"
             app:layout_constraintBottom_toTopOf="@+id/et_reminder_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,8 +40,9 @@
             android:hint="@string/reminder_description_hint"
             android:imeOptions="actionDone"
             android:inputType="textMultiLine"
+            android:importantForAutofill="no"
             android:minHeight="48dp"
-            android:text="@={currentReminder.description}"
+            android:text="@={viewModel.currentReminder.description}"
             app:layout_constraintBottom_toTopOf="@id/location_map"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +77,7 @@
     <data>
 
         <variable
-            name="currentReminder"
-            type="com.example.locationreminder.domain.Reminder" />
+            name="viewModel"
+            type="com.example.locationreminder.presentation.ui.reminders.reminders_edit.ReminderEditViewModel" />
     </data>
 </layout>

@@ -13,4 +13,5 @@
     <string name="create_account_login">Create Account/Login</string>
     <string name="login_welcome_message">Welcome to the Location Reminder app</string>
     <string name="iv_login_content_description">App icon</string>
+    <string name="location_off_or_denied">Location access makes it easier to add geofences near you. Please consider enabling it in the app Settings.</string>
 </resources>
