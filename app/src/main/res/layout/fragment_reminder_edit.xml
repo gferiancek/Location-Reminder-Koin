@@ -1,66 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".presentation.ui.reminders.reminders_edit.ReminderEditFragment">
+        android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/et_reminder_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_normal"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:layout_marginEnd="@dimen/margin_normal"
-            android:ems="10"
-            android:hint="@string/reminder_title_hint"
-            android:imeOptions="actionNext"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:importantForAutofill="no"
-            android:text="@={viewModel.currentReminder.title}"
-            app:layout_constraintBottom_toTopOf="@+id/et_reminder_description"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".presentation.ui.reminders.reminders_edit.ReminderEditFragment">
 
-        <EditText
-            android:id="@+id/et_reminder_description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_normal"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:layout_marginEnd="@dimen/margin_normal"
-            android:ems="10"
-            android:hint="@string/reminder_description_hint"
-            android:imeOptions="actionDone"
-            android:inputType="textMultiLine"
-            android:importantForAutofill="no"
-            android:minHeight="48dp"
-            android:text="@={viewModel.currentReminder.description}"
-            app:layout_constraintBottom_toTopOf="@id/location_map"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_reminder_title" />
+            <EditText
+                android:id="@+id/et_reminder_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:hint="@string/reminder_title_hint"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:minHeight="48dp"
+                android:text="@={currentReminder.title}"
+                app:layout_constraintBottom_toTopOf="@+id/et_reminder_description"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/location_map"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="@dimen/margin_normal"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:layout_marginEnd="@dimen/margin_normal"
-            android:layout_marginBottom="@dimen/margin_normal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_reminder_description"
-            map:uiScrollGestures="true" />
+            <EditText
+                android:id="@+id/et_reminder_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:hint="@string/reminder_description_hint"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:minHeight="48dp"
+                android:text="@={currentReminder.description}"
+                app:layout_constraintBottom_toTopOf="@id/location_map"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_reminder_title" />
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/location_map"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="@dimen/margin_normal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_reminder_description" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_save"
@@ -69,15 +67,18 @@
             android:layout_margin="@dimen/margin_normal"
             android:contentDescription="@string/fab_save"
             android:src="@drawable/ic_baseline_save_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:ignore="ImageContrastCheck" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_anchor="@id/bottom_sheet"
+            app:layout_anchorGravity="top|end" />
+
+        <include
+            android:id="@+id/bottom_sheet"
+            layout="@layout/bottom_sheet_location_persistent" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <data>
 
         <variable
-            name="viewModel"
-            type="com.example.locationreminder.presentation.ui.reminders.reminders_edit.ReminderEditViewModel" />
+            name="currentReminder"
+            type="com.example.locationreminder.domain.Reminder" />
     </data>
 </layout>

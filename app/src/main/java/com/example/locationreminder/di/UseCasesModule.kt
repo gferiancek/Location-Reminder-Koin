@@ -1,9 +1,9 @@
 package com.example.locationreminder.di
 
 import com.example.locationreminder.cache.database.ReminderDao
-import com.example.locationreminder.use_cases.reminders_edit.AddReminderUseCase
-import com.example.locationreminder.use_cases.reminders_edit.EditReminderUseCase
-import com.example.locationreminder.use_cases.reminders_list.GetAllRemindersUseCase
+import com.example.locationreminder.domain.use_cases.reminders_edit.AddReminderUseCase
+import com.example.locationreminder.domain.use_cases.reminders_edit.EditReminderUseCase
+import com.example.locationreminder.domain.use_cases.reminders_list.GetAllRemindersUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

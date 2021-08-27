@@ -1,4 +1,4 @@
-package com.example.locationreminder.use_cases.reminders_edit
+package com.example.locationreminder.domain.use_cases.reminders_edit
 
 import com.example.locationreminder.cache.database.ReminderDao
 import com.example.locationreminder.domain.DataState

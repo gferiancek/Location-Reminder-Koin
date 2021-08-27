@@ -7,7 +7,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.locationreminder.R
 import com.example.locationreminder.databinding.FragmentRemindersListBinding
-import com.example.locationreminder.domain.Reminder
 import com.example.locationreminder.presentation.adapters.ReminderAdapter
 import com.example.locationreminder.presentation.adapters.ReminderListener
 import com.firebase.ui.auth.AuthUI
@@ -31,17 +30,17 @@ class RemindersListFragment : androidx.fragment.app.Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = remindersViewModel
         binding.rvReminders.adapter = ReminderAdapter(ReminderListener { currentReminder ->
-            remindersViewModel.onNavigateToEditScreen(currentReminder)
+            remindersViewModel.onNavigateToEditScreen(currentReminder.id)
         })
 
         binding.fabRemindersAdd.setOnClickListener {
-            remindersViewModel.onNavigateToEditScreen(Reminder())
+            remindersViewModel.onNavigateToEditScreen(0L)
         }
 
-        remindersViewModel.navigateToEditScreen.observe(viewLifecycleOwner) { currentReminder ->
-            currentReminder?.let {
+        remindersViewModel.navigateToEditScreen.observe(viewLifecycleOwner) { reminderId ->
+            reminderId?.let {
                 val label =
-                    if (currentReminder.id == 0L) getString(R.string.label_add_reminder) else getString(
+                    if (reminderId == 0L) getString(R.string.label_add_reminder) else getString(
                         R.string.label_edit_reminder
                     )
                 findNavController().navigate(
@@ -49,7 +48,7 @@ class RemindersListFragment : androidx.fragment.app.Fragment() {
                         // We use Two-Way DataBinding in the Edit Screen, so we send a copy of the reminder.
                         // If we don't, then any changes get written all the way back to the database, even
                         // if the user clicks the back button to cancel editing the reminder.
-                        currentReminder.copy(),
+                        reminderId,
                         label
                     )
                 )

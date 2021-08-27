@@ -18,7 +18,7 @@ fun ReminderEntity.toReminder(): Reminder {
         id = id,
         title = title,
         description = description,
-        location = location
+        location_name = location
     )
 }
 

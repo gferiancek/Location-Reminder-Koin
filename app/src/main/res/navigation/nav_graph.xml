@@ -31,9 +31,8 @@
             app:destination="@id/remindersListFragment"
             app:popUpTo="@id/remindersListFragment" />
         <argument
-            android:name="currentReminder"
-            app:argType="com.example.locationreminder.domain.Reminder"
-            app:nullable="true" />
+            android:name="reminderId"
+            app:argType="long" />
         <argument
             android:name="label"
             app:argType="string" />

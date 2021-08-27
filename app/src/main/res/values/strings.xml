@@ -3,8 +3,6 @@
     <string name="reminders_no_data">No location reminders found.\nAdd some with the \'+\' button</string>
     <string name="reminders_fab_content_description">FAB to add a new location reminder.</string>
     <string name="reminders_no_data_iv_content_description">Image indicating no location reminders have been created.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="reminder_title_hint">Title</string>
     <string name="reminder_description_hint">Description</string>
     <string name="fab_save">Save current reminder</string>
@@ -14,4 +12,41 @@
     <string name="login_welcome_message">Welcome to the Location Reminder app</string>
     <string name="iv_login_content_description">App icon</string>
     <string name="location_off_or_denied">Location access makes it easier to add geofences near you. Please consider enabling it in the app Settings.</string>
+    <string name="label_location_name">Location Name</string>
+    <string name="hint_googleplex">Googleplex</string>
+    <string name="label_geofence_radius">Geofence Radius (Meters)</string>
+    <string name="hint_50">50</string>
+    <string name="label_geofence_expiration">Geofence Request Expiration</string>
+    <string name="label_interval">Interval</string>
+    <string name="label_duration">Duration</string>
+    <string name="label_transition_type">Transition Type</string>
+    <string name="tv_new_geofence_label">New Geofence Request</string>
+    <string name="map_id">8a01eff3a12ceb8d</string>
+    <string name="location_denied">Location access is required to trigger geofences. Please enable it in the app Settings.</string>
+    <string name="location_dialog_title">Background Location Required</string>
+    <string name="location_rationale">Background location permissions are needed to trigger notifications upon entering a geofence. Please check the \"Allow all the time\" option on the Settings page.</string>
+    <string name="dropped_pin">Dropped Pin</string>
+    <string name="fetching_location">Fetching current location data.</string>
+    <string name="no_value" />
+    <string name="no_transition_type">Please select a transition type</string>
+    <string name="no_latlng">Please select a location on the map for your geofence</string>
+    <string name="missing_data">Please fill out all fields before submitting reminder</string>
+    <string name="header_add_request">Add Geofence Request</string>
+    <string name="header_edit_request">Edit Geofence Request</string>
+    <string name="action_ok">OK</string>
+    <string-array name="spinner_entries_intervals">
+        <item>Never</item>
+        <item>Minute(s)</item>
+        <item>Hour(s)</item>
+        <item>Day(s)</item>
+        <item>Weeks(s)</item>
+        <item>Month(s)</item>
+        <item>Year(s)</item>
+    </string-array>
+    <string-array name="spinner_entries_transition_types">
+        <item>Enter</item>
+        <item>Exit</item>
+        <item>Dwell</item>
+        <item>Select One…</item>
+    </string-array>
 </resources>

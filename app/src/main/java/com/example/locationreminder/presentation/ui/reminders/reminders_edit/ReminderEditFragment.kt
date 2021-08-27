@@ -1,17 +1,25 @@
 package com.example.locationreminder.presentation.ui.reminders.reminders_edit
 
 import android.Manifest
+import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.cardview.widget.CardView
+import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -19,7 +27,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.locationreminder.R
 import com.example.locationreminder.databinding.FragmentReminderEditBinding
-import com.example.locationreminder.domain.Reminder
 import com.example.locationreminder.presentation.ui.reminders.reminders_edit.ReminderEditEvent.AddNewReminderEvent
 import com.example.locationreminder.presentation.ui.reminders.reminders_edit.ReminderEditEvent.EditCurrentReminderEvent
 import com.google.android.gms.common.api.ResolvableApiException
@@ -27,10 +34,10 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,45 +47,65 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
 
     private val editViewModel: ReminderEditViewModel by viewModels()
     private lateinit var map: GoogleMap
+    private lateinit var circleOverlay: Circle
+    private lateinit var activeMarker: Marker
     private lateinit var binding: FragmentReminderEditBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationCallback: LocationCallback
+    private lateinit var geofencingClient: GeofencingClient
+    private lateinit var geofenceSheet: BottomSheetBehavior<CardView>
+    private var radiusAnimator = ValueAnimator()
 
     /**
-     * This launcher is called when the user has device location turned on, prompts them to turn on
-     * location, and acts based on their decision.
+     * Launchers and helper function for checking location services/permissions and responding to the user's choice.
      */
-    private val locationResolutionLauncher = registerForActivityResult(
+    private val locationServicesLauncher = registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
-    ) { activityResult ->
-        if (activityResult.resultCode == RESULT_OK) {
-            enableOrRequestLocation()
-        } else {
-            editViewModel.displayNewSnackbar(getString(R.string.location_off_or_denied))
-        }
-    }
+    ) { result -> if (result.resultCode == RESULT_OK) requestLocation() else findNavController().popBackStack() }
 
-    /**
-     * This launcher is called when the user has not approved fine location permissions, prompts them to
-     * approve the permission, and acts based on their decision
-     */
-    private val locationLauncher = registerForActivityResult(
+    private val courseAndFineLocationLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { results ->
-        if (results.all { it.value == true }) {
-            enableOrRequestLocation()
-        } else {
-            editViewModel.displayNewSnackbar(getString(R.string.location_off_or_denied))
-        }
-    }
+    ) { results -> if (results.all { it.value == true }) enableLocation() else handleDeniedLocation() }
 
     private val backgroundLocationLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            // Start Geofencing
-        } else {
-            editViewModel.displayNewSnackbar("Background location is required to trigger geofence notifications. Please enable it in the app Settings.")
+    ) { isGranted -> if (isGranted) saveReminder() else handleDeniedLocation() }
+
+    /**
+     * Location permissions are asked for incrementally, but if any of them are denied, we jump straight
+     * to asking the user to enable background location.  This way, we explain up front why we need
+     * access and the user following the request will green light us for the rest of the app flow.
+     */
+    private fun handleDeniedLocation() {
+        AlertDialog.Builder(requireContext())
+            .setMessage(getString(R.string.location_rationale))
+            .setTitle(getString(R.string.location_dialog_title))
+            .setPositiveButton("Settings") { _, _ ->
+                val settingsIntent = Intent(
+                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.fromParts(
+                        "package",
+                        requireContext().packageName,
+                        null
+                    )
+                ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(settingsIntent)
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+                findNavController().popBackStack()
+            }.show()
+    }
+
+    /**If the user's location is turned off, then it is likely that the MapView/Permissions will finish
+     * initializing before a new lastLocation is established.  This callback lets us move the camera
+     * to the user's position once it is ready.
+     */
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            val lastLocation = locationResult.lastLocation
+            val latLng = LatLng(lastLocation.latitude, lastLocation.longitude)
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+            fusedLocationClient.removeLocationUpdates(this)
         }
     }
 
@@ -86,65 +113,71 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        geofencingClient = LocationServices.getGeofencingClient(requireContext())
         binding = DataBindingUtil.inflate(
             layoutInflater,
             R.layout.fragment_reminder_edit,
             container,
             false
         )
-        if (editViewModel.currentReminder == null) {
-            val currentReminder = requireArguments().getParcelable<Reminder>("currentReminder")
-            editViewModel.currentReminder = currentReminder
-        }
-        binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = editViewModel
-        }
-        setupListenersAndObservers()
-
-        binding.locationMap.onCreate(savedInstanceState)
-        binding.locationMap.getMapAsync(this)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        // If the user's location is turned off, then it is likely that the MapView/Permissions will finish
-        // initializing before a new lastLocation is established.  This callback lets us move the camera
-        // to the user's position once it is ready.
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                val lastLocation = locationResult.lastLocation
-                val latLng = LatLng(lastLocation.latitude, lastLocation.longitude)
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f))
-                fusedLocationClient.removeLocationUpdates(locationCallback)
-            }
-        }
-        checkLocationSettings()
         return binding.root
     }
 
-    /**
-     * Function that sets Listeners and observes fields in the viewModel.  Extracted out of onCreate
-     * to get rid of clutter.
-     */
-    private fun setupListenersAndObservers() {
-        binding.fabSave.setOnClickListener {
-            editViewModel.currentReminder?.id.let { id ->
-                when (id) {
-                    0L -> editViewModel.onTriggerEvent(AddNewReminderEvent)
-                    else -> editViewModel.onTriggerEvent(EditCurrentReminderEvent)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            currentReminder = editViewModel.currentReminder
+            bottomSheet.currentReminder = editViewModel.currentReminder
+            fabSave.setOnClickListener { if (Build.VERSION.SDK_INT >= 29) requestBackgroundLocation() else saveReminder() }
+            locationMap.onCreate(savedInstanceState)
+            locationMap.getMapAsync(this@ReminderEditFragment)
+        }
+        editViewModel.apply {
+            snackbarMessage.observe(viewLifecycleOwner) { message ->
+                if (message.isNotBlank()) {
+                    if (message.equals(getString(R.string.no_transition_type))) {
+                        geofenceSheet.state = STATE_EXPANDED
+                    }
+                    val snackBar = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
+                    if (geofenceSheet.state == STATE_HIDDEN) {
+                        snackBar.anchorView = binding.fabSave
+                    }
+                    snackBar.setAction(getString(R.string.action_ok)) { snackBar.dismiss() }
+                        .show()
+                    editViewModel.onSnackbarMessageDisplayed()
+                }
+            }
+            eventSuccess.observe(viewLifecycleOwner) { isSuccessful ->
+                if (isSuccessful) {
+                    findNavController().popBackStack()
+                    editViewModel.onEventSuccessHandled()
                 }
             }
         }
-        editViewModel.snackbarMessage.observe(viewLifecycleOwner) { message ->
-            if (message.isNotBlank()) {
-                Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
-                editViewModel.onSnackbarMessageDisplayed()
-            }
+        geofenceSheet = from(binding.bottomSheet.cvBottomSheet).apply {
+            state = STATE_HIDDEN
+            addBottomSheetCallback(object : BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    binding.bottomSheet.tvGeofenceRequestHeader.let { header ->
+                        if (newState == STATE_EXPANDED) {
+                            header.setCompoundDrawablesWithIntrinsicBounds(
+                                0, R.drawable.ic_baseline_expand_less_24, 0, 0
+                            )
+                        } else if (newState == STATE_COLLAPSED) {
+                            header.setCompoundDrawablesWithIntrinsicBounds(
+                                0, R.drawable.ic_baseline_expand_up_24, 0, 0
+                            )
+                        }
+                    }
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+            })
         }
-        editViewModel.eventSuccess.observe(viewLifecycleOwner) { isSuccessful ->
-            if (isSuccessful) {
-                findNavController().popBackStack()
-                editViewModel.onEventSuccessHandled()
-            }
-        }
+        checkLocationSettings()
     }
 
     /**
@@ -152,27 +185,88 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
      * are set in the requestFineLocation() function and launcher.
      */
     override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
-        map.setMapStyle(
-            MapStyleOptions.loadRawResourceStyle(
-                requireContext(),
-                R.raw.map_style
+        map = googleMap.apply {
+            setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                    requireContext(),
+                    R.raw.map_style
+                )
             )
-        )
-        map.setOnPoiClickListener { poi ->
-            map.addMarker(
-                MarkerOptions()
-                    .position(poi.latLng)
-                    .title(poi.name)
-            )?.showInfoWindow()
+            editViewModel.currentReminder.let { reminder ->
+                circleOverlay = MapUtils.createCircle(
+                    this,
+                    reminder.latLng,
+                    requireContext()
+                )
+                activeMarker = MapUtils.createMarker(
+                    this,
+                    reminder.latLng
+                )
+            }
+            setOnMarkerClickListener {
+                geofenceSheet.state = when (geofenceSheet.state) {
+                    STATE_EXPANDED -> STATE_EXPANDED
+                    else -> STATE_COLLAPSED
+                }
+                true
+            }
+            setOnPoiClickListener { poi ->
+                respondToMapClickEvent(
+                    poi.latLng,
+                    poi.name
+                )
+            }
+            setOnMapLongClickListener { location ->
+                respondToMapClickEvent(
+                    LatLng(location.latitude, location.longitude),
+                    getString(R.string.dropped_pin)
+                )
+            }
+        }
+        // This requires circleOverlay to be initialized so it cannot be setup in onViewCreated.
+        binding.bottomSheet.sliderSheetRadius.addOnChangeListener { _, value, _ ->
+            if (radiusAnimator.isRunning) radiusAnimator.end()
+            radiusAnimator = MapUtils.createRadiusAnimation(circleOverlay, value)
+            radiusAnimator.start()
         }
     }
 
-    private fun createLocationRequest(): LocationRequest {
-        return LocationRequest.create().apply {
-            interval = 100
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    /**
+     * Helper function to setup the map after receiving a click event.
+     */
+    private fun respondToMapClickEvent(latLng: LatLng, name: String) {
+        editViewModel.currentReminder.latLng = latLng
+        if (circleOverlay.radius > 0 &&
+            activeMarker.alpha > 0
+        ) {
+            MapUtils.createFadeOutAnimation(
+                circleOverlay,
+                activeMarker,
+            ).apply {
+                doOnEnd {
+                    map.clear()
+                    circleOverlay = MapUtils.createCircle(map, latLng, requireContext())
+                    activeMarker = MapUtils.createMarker(map, latLng)
+                    MapUtils.createFadeInAnimation(
+                        circleOverlay,
+                        activeMarker,
+                        binding.bottomSheet.sliderSheetRadius.value
+                    ).start()
+                }
+                start()
+            }
+        } else {
+            circleOverlay = MapUtils.createCircle(map, latLng, requireContext())
+            activeMarker = MapUtils.createMarker(map, latLng)
+            MapUtils.createFadeInAnimation(
+                circleOverlay,
+                activeMarker,
+                binding.bottomSheet.sliderSheetRadius.value
+            ).start()
         }
+        map.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+        binding.bottomSheet.etSheetName.setText(name)
+        geofenceSheet.state = STATE_COLLAPSED
     }
 
     /**
@@ -185,14 +279,23 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
         val client: SettingsClient = LocationServices.getSettingsClient(requireContext())
         val task: Task<LocationSettingsResponse> =
             client.checkLocationSettings(locationRequestBuilder.build())
-        task.addOnSuccessListener {
-            enableOrRequestLocation()
-        }
+        task.addOnSuccessListener { requestLocation() }
         task.addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
-                val intentSenderRequest = IntentSenderRequest.Builder(exception.resolution)
-                locationResolutionLauncher.launch(intentSenderRequest.build())
+                locationServicesLauncher.launch(
+                    IntentSenderRequest.Builder(exception.resolution).build()
+                )
             }
+        }
+    }
+
+    /**
+     * Helper function to create a location request
+     */
+    private fun createLocationRequest(): LocationRequest {
+        return LocationRequest.create().apply {
+            interval = 5000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
 
@@ -200,40 +303,49 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
      * Checks if user has enabled the fine location permission.  If enabled, adds location capabilities
      * to our MapView. If disabled, starts launcher to request the permission.
      */
-    private fun enableOrRequestLocation() {
+    private fun requestLocation() {
         val fineLocation = ContextCompat.checkSelfPermission(
             requireContext(),
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
-
         val coarseLocation = ContextCompat.checkSelfPermission(
             requireContext(),
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
-        when (fineLocation && coarseLocation) {
-            true -> {
-                map.isMyLocationEnabled = true
-                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                    if (location != null) {
-                        val latLng = LatLng(location.latitude, location.longitude)
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f))
-                    } else {
-                        editViewModel.displayNewSnackbar("Fetching current location data.")
-                        fusedLocationClient.requestLocationUpdates(
-                            createLocationRequest(),
-                            locationCallback,
-                            Looper.getMainLooper()
-                        )
-                    }
-                }
-            }
-            false -> {
-                locationLauncher.launch(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
+        when {
+            fineLocation && coarseLocation -> enableLocation()
+            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> handleDeniedLocation()
+            else -> courseAndFineLocationLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
                 )
+            )
+        }
+    }
+
+    /**
+     * Logic to enable location on our MapView. Since the logic is used in two places it has been extracted
+     * out to a function.  However, Android Studio now thinks it is being called without checking permissions
+     * so we suppress that Lint warning.
+     */
+    @SuppressLint("MissingPermission")
+    private fun enableLocation() {
+        map.isMyLocationEnabled = true
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            when {
+                location != null -> {
+                    val latLng = LatLng(location.latitude, location.longitude)
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+                }
+                else -> {
+                    editViewModel.displayNewSnackbar(getString(R.string.fetching_location))
+                    fusedLocationClient.requestLocationUpdates(
+                        createLocationRequest(),
+                        locationCallback,
+                        Looper.getMainLooper()
+                    )
+                }
             }
         }
     }
@@ -248,11 +360,22 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
             Manifest.permission.ACCESS_BACKGROUND_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
-        when (backgroundLocation) {
-            true -> {
-                // Start geofencing
+        when {
+            backgroundLocation -> saveReminder()
+            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_BACKGROUND_LOCATION) -> {
+                handleDeniedLocation()
             }
-            false -> backgroundLocationLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+            else -> backgroundLocationLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+        }
+    }
+
+    /**
+     * Extracting out logic since it is used in 3 different places.
+     */
+    private fun saveReminder() {
+        when (editViewModel.currentReminder.id) {
+            0L -> editViewModel.onTriggerEvent(AddNewReminderEvent)
+            else -> editViewModel.onTriggerEvent(EditCurrentReminderEvent)
         }
     }
 

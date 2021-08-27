@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_bottom_sheet"
+        style="@style/CustomCardViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="224dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_bottom_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/et_sheet_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:hint="@string/hint_googleplex"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:minHeight="48dp"
+                android:text="@={currentReminder.location_name}"
+                app:layout_constraintBottom_toTopOf="@+id/tv_sheet_radius_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tv_sheet_name_label"
+                app:layout_constraintTop_toBottomOf="@+id/tv_sheet_name_label" />
+
+            <Spinner
+                android:id="@+id/spinner_expiration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:entries="@array/spinner_entries_intervals"
+                android:minHeight="48dp"
+                android:selectedItemPosition="@={currentReminder.expirationInterval}"
+                android:spinnerMode="dropdown"
+                app:layout_constraintBottom_toTopOf="@+id/slider_sheet_duration"
+                app:layout_constraintEnd_toEndOf="@+id/slider_sheet_radius"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/tv_sheet_duration"
+                app:layout_constraintTop_toBottomOf="@+id/tv_sheet_expiration_label" />
+
+            <Spinner
+                android:id="@+id/spinner_transition"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:entries="@array/spinner_entries_transition_types"
+                android:minHeight="48dp"
+                android:selectedItemPosition="@={currentReminder.transitionType}"
+                android:spinnerMode="dropdown"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/slider_sheet_duration"
+                app:layout_constraintStart_toStartOf="@+id/tv_sheet_name_label"
+                app:layout_constraintTop_toBottomOf="@+id/tv_sheet_transition_label"
+                app:setCustomAdapter="@{true}" />
+
+            <TextView
+                android:id="@+id/tv_geofence_request_header"
+                headerText="@{currentReminder.id}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/primary"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:drawableTopCompat="@drawable/ic_baseline_expand_up_24"
+                app:layout_constraintBottom_toTopOf="@+id/tv_sheet_name_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/tv_sheet_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginTop="@dimen/margin_small"
+                android:text="@string/label_location_name"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/et_sheet_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_geofence_request_header" />
+
+            <TextView
+                android:id="@+id/tv_sheet_radius_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/label_geofence_radius"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/slider_sheet_radius"
+                app:layout_constraintStart_toStartOf="@+id/tv_sheet_name_label"
+                app:layout_constraintTop_toBottomOf="@+id/et_sheet_name" />
+
+            <TextView
+                android:id="@+id/tv_sheet_expiration_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:labelFor="@id/spinner_expiration"
+                android:text="@string/label_geofence_expiration"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/spinner_expiration"
+                app:layout_constraintStart_toStartOf="@+id/tv_sheet_name_label"
+                app:layout_constraintTop_toBottomOf="@+id/slider_sheet_radius" />
+
+            <TextView
+                android:id="@+id/tv_sheet_duration"
+                duration="@{currentReminder.expirationDuration}"
+                interval="@{currentReminder.expirationInterval}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/spinner_expiration"
+                app:layout_constraintStart_toStartOf="@+id/tv_sheet_name_label" />
+
+            <TextView
+                android:id="@+id/tv_sheet_transition_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:text="@string/label_transition_type"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/spinner_transition"
+                app:layout_constraintStart_toStartOf="@+id/tv_sheet_name_label"
+                app:layout_constraintTop_toBottomOf="@+id/slider_sheet_duration" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/slider_sheet_radius"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:minHeight="48dp"
+                android:stepSize="10"
+                android:value="@={currentReminder.geofence_radius}"
+                android:valueFrom="10"
+                android:valueTo="1000"
+                app:layout_constraintBottom_toTopOf="@+id/tv_sheet_expiration_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tv_sheet_name_label"
+                app:layout_constraintTop_toBottomOf="@+id/tv_sheet_radius_label"
+                app:tickVisible="false" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/slider_sheet_duration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:enabled="@{currentReminder.expirationInterval == 0 ? false : true}"
+                android:minHeight="48dp"
+                android:stepSize="1"
+                android:value="@={currentReminder.expirationDuration}"
+                android:valueFrom="1"
+                android:valueTo="50"
+                app:layout_constraintBottom_toTopOf="@+id/tv_sheet_transition_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/tv_sheet_name_label"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_expiration"
+                app:tickVisible="false" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <data>
+
+        <variable
+            name="currentReminder"
+            type="com.example.locationreminder.domain.Reminder" />
+    </data>
+</layout>
