@@ -26,13 +26,9 @@
         android:id="@+id/editReminderFragment"
         android:name="com.example.locationreminder.presentation.ui.reminders.reminders_edit.ReminderEditFragment"
         android:label="{label}">
-        <action
-            android:id="@+id/action_editReminderFragment_to_remindersListFragment"
-            app:destination="@id/remindersListFragment"
-            app:popUpTo="@id/remindersListFragment" />
         <argument
-            android:name="reminderId"
-            app:argType="long" />
+            android:name="currentReminder"
+            app:argType="com.example.locationreminder.domain.model.Reminder" />
         <argument
             android:name="label"
             app:argType="string" />

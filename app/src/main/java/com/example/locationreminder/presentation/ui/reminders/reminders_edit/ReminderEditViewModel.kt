@@ -3,9 +3,10 @@ package com.example.locationreminder.presentation.ui.reminders.reminders_edit
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.locationreminder.domain.Reminder
+import com.example.locationreminder.domain.model.Reminder
 import com.example.locationreminder.domain.use_cases.reminders_edit.AddReminderUseCase
 import com.example.locationreminder.domain.use_cases.reminders_edit.EditReminderUseCase
+import com.example.locationreminder.domain.use_cases.reminders_edit.RetrieveReminderUseCase
 import com.example.locationreminder.presentation.ui.reminders.reminders_edit.ReminderEditEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,10 +19,12 @@ import javax.inject.Inject
 @HiltViewModel
 class ReminderEditViewModel @Inject constructor(
     private val addReminderUseCase: AddReminderUseCase,
-    private val editReminderUseCase: EditReminderUseCase
+    private val editReminderUseCase: EditReminderUseCase,
+    private val retrieveReminderUseCase: RetrieveReminderUseCase
 ) : ViewModel() {
 
     var currentReminder = Reminder()
+    var isEditing = false
 
     private val _snackbarMessage = MutableLiveData<String>()
     val snackbarMessage: MutableLiveData<String>
@@ -41,6 +44,7 @@ class ReminderEditViewModel @Inject constructor(
                 when (event) {
                     is AddNewReminderEvent -> addReminder()
                     is EditCurrentReminderEvent -> editReminder()
+                    is RetrieveReminderEvent -> retrieveReminder(id = event.id)
                     is DeleteCurrentReminderEvent -> deleteReminder(id = event.id)
                 }
             }
@@ -70,6 +74,17 @@ class ReminderEditViewModel @Inject constructor(
             dataState.error?.let { message ->
                 _snackbarMessage.value = message
                 _eventSuccess.value = false
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun retrieveReminder(id: String) {
+        retrieveReminderUseCase.execute(id).onEach { dataState ->
+            dataState.data?.let { data ->
+                currentReminder = data
+            }
+            dataState.error?.let { message ->
+                _snackbarMessage.value = message
             }
         }.launchIn(viewModelScope)
     }

@@ -9,12 +9,12 @@
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/drawable/ic_location_reminder.xml" value="0.1935185185185185" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/drawable/rounded_top_corners.xml" value="0.5435185185185185" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/activity_main.xml" value="0.5774358974358974" />
-        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/bottom_sheet_location_persistent.xml" value="0.16279069767441862" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/bottom_sheet_location_persistent.xml" value="0.5313827277017461" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_edit_reminder.xml" value="0.1" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_login.xml" value="0.5635897435897436" />
-        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_reminder_edit.xml" value="0.136986301369863" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_reminder_edit.xml" value="0.4539130434782609" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_reminders_list.xml" value="0.5" />
-        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/list_item_reminder.xml" value="0.5864583333333333" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/list_item_reminder.xml" value="0.1" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/reminders_list_fragment.xml" value="0.5864583333333333" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/sheet_location.xml" value="0.5555555555555556" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/menu/menu_reminder_list.xml" value="0.5864583333333333" />

@@ -7,9 +7,9 @@
         style="@style/CustomCardViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
         app:behavior_hideable="true"
         app:behavior_peekHeight="224dp"
+        android:focusable="true"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,7 +27,7 @@
                 android:importantForAutofill="no"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
-                android:text="@={currentReminder.location_name}"
+                android:text="@={viewModel.currentReminder.location_name}"
                 app:layout_constraintBottom_toTopOf="@+id/tv_sheet_radius_label"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_sheet_name_label"
@@ -40,7 +40,7 @@
                 android:layout_marginStart="@dimen/margin_normal"
                 android:entries="@array/spinner_entries_intervals"
                 android:minHeight="48dp"
-                android:selectedItemPosition="@={currentReminder.expirationInterval}"
+                android:selectedItemPosition="@={viewModel.currentReminder.expirationInterval}"
                 android:spinnerMode="dropdown"
                 app:layout_constraintBottom_toTopOf="@+id/slider_sheet_duration"
                 app:layout_constraintEnd_toEndOf="@+id/slider_sheet_radius"
@@ -55,7 +55,7 @@
                 android:layout_marginBottom="@dimen/margin_small"
                 android:entries="@array/spinner_entries_transition_types"
                 android:minHeight="48dp"
-                android:selectedItemPosition="@={currentReminder.transitionType}"
+                android:selectedItemPosition="@={viewModel.currentReminder.transitionType}"
                 android:spinnerMode="dropdown"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/slider_sheet_duration"
@@ -65,7 +65,7 @@
 
             <TextView
                 android:id="@+id/tv_geofence_request_header"
-                headerText="@{currentReminder.id}"
+                headerText="@{viewModel.isEditing}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@color/primary"
@@ -124,8 +124,8 @@
 
             <TextView
                 android:id="@+id/tv_sheet_duration"
-                duration="@{currentReminder.expirationDuration}"
-                interval="@{currentReminder.expirationInterval}"
+                duration="@{viewModel.currentReminder.expirationDuration}"
+                interval="@{viewModel.currentReminder.expirationInterval}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_normal"
@@ -154,7 +154,7 @@
                 android:layout_marginEnd="@dimen/margin_large"
                 android:minHeight="48dp"
                 android:stepSize="10"
-                android:value="@={currentReminder.geofence_radius}"
+                android:value="@={viewModel.currentReminder.geofence_radius}"
                 android:valueFrom="10"
                 android:valueTo="1000"
                 app:layout_constraintBottom_toTopOf="@+id/tv_sheet_expiration_label"
@@ -168,10 +168,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_large"
-                android:enabled="@{currentReminder.expirationInterval == 0 ? false : true}"
+                android:enabled="@{viewModel.currentReminder.expirationInterval == 0 ? false : true}"
                 android:minHeight="48dp"
                 android:stepSize="1"
-                android:value="@={currentReminder.expirationDuration}"
+                android:value="@={viewModel.currentReminder.expirationDuration}"
                 android:valueFrom="1"
                 android:valueTo="50"
                 app:layout_constraintBottom_toTopOf="@+id/tv_sheet_transition_label"
@@ -186,7 +186,7 @@
     <data>
 
         <variable
-            name="currentReminder"
-            type="com.example.locationreminder.domain.Reminder" />
+            name="viewModel"
+            type="com.example.locationreminder.presentation.ui.reminders.reminders_edit.ReminderEditViewModel" />
     </data>
 </layout>

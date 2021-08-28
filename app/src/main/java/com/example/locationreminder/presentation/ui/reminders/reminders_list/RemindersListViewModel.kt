@@ -3,7 +3,7 @@ package com.example.locationreminder.presentation.ui.reminders.reminders_list
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.locationreminder.domain.Reminder
+import com.example.locationreminder.domain.model.Reminder
 import com.example.locationreminder.domain.use_cases.reminders_list.GetAllRemindersUseCase
 import com.example.locationreminder.presentation.ui.reminders.reminders_list.RemindersListEvent.GetAllReminders
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +19,8 @@ class RemindersListViewModel @Inject constructor(
     private val getAllRemindersUseCase: GetAllRemindersUseCase
 ) : ViewModel() {
 
-    private val _navigateToEditScreen = MutableLiveData<Long?>()
-    val navigateToEditScreen: MutableLiveData<Long?>
+    private val _navigateToEditScreen = MutableLiveData<Reminder?>()
+    val navigateToEditScreen: MutableLiveData<Reminder?>
         get() = _navigateToEditScreen
 
     private val _snackbarMessage = MutableLiveData<String>()
@@ -61,8 +61,8 @@ class RemindersListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun onNavigateToEditScreen(reminderId: Long) {
-        _navigateToEditScreen.value = reminderId
+    fun onNavigateToEditScreen(currentReminder: Reminder) {
+        _navigateToEditScreen.value = currentReminder
     }
 
     fun onNavigateToEditScreenFinished() {

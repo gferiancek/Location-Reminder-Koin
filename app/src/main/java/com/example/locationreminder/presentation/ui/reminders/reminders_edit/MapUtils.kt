@@ -6,8 +6,11 @@ import android.animation.ValueAnimator
 import android.content.Context
 import androidx.core.content.ContextCompat
 import com.example.locationreminder.R
+import com.example.locationreminder.presentation.ui.reminders.reminders_edit.MapUtils.MillisConversions.*
+import com.google.android.gms.location.Geofence
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
+import java.util.concurrent.TimeUnit
 
 object MapUtils {
     fun createCircle(
@@ -73,6 +76,37 @@ object MapUtils {
         return ValueAnimator.ofFloat(circle.radius.toFloat(), targetRadius).apply {
             duration = 500
             addUpdateListener { circle.radius = (it.animatedValue as Float).toDouble() }
+        }
+    }
+
+    fun convertExpirationToMs(interval: Int, duration: Float): Long {
+        val durationLong = (interval * duration).toLong()
+        return when (interval) {
+            1 -> TimeUnit.MINUTES.toMillis(durationLong)
+            2 -> TimeUnit.HOURS.toMillis(durationLong)
+            3 -> TimeUnit.DAYS.toMillis(durationLong)
+            4 -> (duration * WEEK().ratio).toLong()
+            5 -> (duration * MONTH().ratio).toLong()
+            6 -> (duration * YEAR().ratio).toLong()
+            else -> Geofence.NEVER_EXPIRE
+        }
+    }
+
+    /**
+     * Java TimeUnit doesn't have weeks or above, so we need our own values!
+     */
+    sealed class MillisConversions {
+        data class WEEK(val ratio: Long = 604800000)
+        data class MONTH(val ratio: Long = 2628000000)
+        data class YEAR(val ratio: Long = 31540000000)
+    }
+
+    fun getTransitionConstant(position: Int): Int {
+        return when (position) {
+            0 -> Geofence.GEOFENCE_TRANSITION_ENTER
+            1 -> Geofence.GEOFENCE_TRANSITION_EXIT
+            2 -> Geofence.GEOFENCE_TRANSITION_DWELL
+            else -> Geofence.GEOFENCE_TRANSITION_ENTER
         }
     }
 }

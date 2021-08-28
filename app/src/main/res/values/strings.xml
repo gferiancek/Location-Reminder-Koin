@@ -3,8 +3,8 @@
     <string name="reminders_no_data">No location reminders found.\nAdd some with the \'+\' button</string>
     <string name="reminders_fab_content_description">FAB to add a new location reminder.</string>
     <string name="reminders_no_data_iv_content_description">Image indicating no location reminders have been created.</string>
-    <string name="reminder_title_hint">Title</string>
-    <string name="reminder_description_hint">Description</string>
+    <string name="reminder_title_hint">Study Hard</string>
+    <string name="reminder_description_hint">Pass project, knock Capstone out of the park!</string>
     <string name="fab_save">Save current reminder</string>
     <string name="label_add_reminder">Add Reminder</string>
     <string name="label_edit_reminder">Edit Reminder</string>
@@ -34,6 +34,13 @@
     <string name="header_add_request">Add Geofence Request</string>
     <string name="header_edit_request">Edit Geofence Request</string>
     <string name="action_ok">OK</string>
+    <string name="tv_title_label">Reminder Title</string>
+    <string name="tv_description_label">Reminder Description</string>
+    <string name="tv_mapview_label">Geofence Location</string>
+    <string name="geofencing_request_failed">An issue occurred when creating a geofencing request.  Please try again.</string>
+    <string name="channel_geofence_name">GeofenceStatus</string>
+    <string name="channel_geofence_id">GeofenceChannel</string>
+    <string name="channel_geofence_description">Provides updates about triggered geofences</string>
     <string-array name="spinner_entries_intervals">
         <item>Never</item>
         <item>Minute(s)</item>

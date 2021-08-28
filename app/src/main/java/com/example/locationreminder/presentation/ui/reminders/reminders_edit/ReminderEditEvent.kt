@@ -6,5 +6,7 @@ sealed class ReminderEditEvent {
 
     object EditCurrentReminderEvent : ReminderEditEvent()
 
+    data class RetrieveReminderEvent(val id: String) : ReminderEditEvent()
+
     data class DeleteCurrentReminderEvent(val id: Long) : ReminderEditEvent()
 }

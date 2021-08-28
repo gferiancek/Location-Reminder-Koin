@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.locationreminder.databinding.ListItemReminderBinding
-import com.example.locationreminder.domain.Reminder
+import com.example.locationreminder.domain.model.Reminder
 
 class ReminderAdapter(private val clickListener: ReminderListener) :
     ListAdapter<Reminder, ReminderAdapter.ReminderViewHolder>(
@@ -56,6 +56,6 @@ class ReminderDiffCallback : DiffUtil.ItemCallback<Reminder>() {
     }
 }
 
-class ReminderListener(val clickListener: (reminder: Reminder) -> Unit) {
-    fun onClick(reminder: Reminder) = clickListener(reminder)
+class ReminderListener(val clickListener: (currentReminder: Reminder) -> Unit) {
+    fun onClick(currentReminder: Reminder) = clickListener(currentReminder)
 }

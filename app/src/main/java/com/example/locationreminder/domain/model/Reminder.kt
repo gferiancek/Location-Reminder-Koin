@@ -1,22 +1,26 @@
-package com.example.locationreminder.domain
+package com.example.locationreminder.domain.model
 
+import android.os.Parcelable
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
 import com.example.locationreminder.cache.model.ReminderEntity
-import com.google.android.gms.maps.model.LatLng
+import kotlinx.parcelize.Parcelize
+import java.util.*
 
+@Parcelize
 data class Reminder(
-    var id: Long = 0L,
+    var id: String = UUID.randomUUID().toString(),
     var title: String = "",
     var description: String = "",
-    var latLng: LatLng = LatLng(0.0, 0.0),
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0,
     var location_name: String = "",
     var geofence_radius: Float = 100f,
     private var _expiration_interval: Int = 0,
     private var _expiration_duration: Float = 1f,
     private var _transitionType: Int = 3
-) : BaseObservable() {
+) : BaseObservable(), Parcelable {
     fun missingData(): Boolean = title.isBlank() || description.isBlank()
 
     var expirationInterval: Int
@@ -46,6 +50,12 @@ fun Reminder.toReminderEntity(): ReminderEntity {
         id = id,
         title = title,
         description = description,
-        location = location_name
+        latitude = latitude,
+        longitude = longitude,
+        location_name = location_name,
+        geofence_radius = geofence_radius,
+        expiration_interval = expirationInterval,
+        expiration_duration = expirationDuration,
+        transition_type = transitionType
     )
 }

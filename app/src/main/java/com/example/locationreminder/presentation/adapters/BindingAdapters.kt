@@ -8,7 +8,7 @@ import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import androidx.recyclerview.widget.RecyclerView
 import com.example.locationreminder.R
-import com.example.locationreminder.domain.Reminder
+import com.example.locationreminder.domain.model.Reminder
 import com.google.android.material.slider.Slider
 
 @BindingAdapter("bindReminders")
@@ -20,10 +20,10 @@ fun RecyclerView.bindReminders(reminderList: List<Reminder>?) {
 }
 
 @BindingAdapter("headerText")
-fun TextView.setHeaderText(id: Long) {
-    text = when (id) {
-        0L -> resources.getString(R.string.header_add_request)
-        else -> resources.getString(R.string.header_edit_request)
+fun TextView.setHeaderText(isEditing: Boolean) {
+    text = when (isEditing) {
+        true -> resources.getString(R.string.header_edit_request)
+        else -> resources.getString(R.string.header_add_request)
     }
 }
 

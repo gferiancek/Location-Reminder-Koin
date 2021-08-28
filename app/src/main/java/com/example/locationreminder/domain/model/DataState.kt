@@ -1,4 +1,4 @@
-package com.example.locationreminder.domain
+package com.example.locationreminder.domain.model
 
 data class DataState<out T>(
     val data: T? = null,

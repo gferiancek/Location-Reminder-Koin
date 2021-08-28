@@ -2,8 +2,8 @@ package com.example.locationreminder.domain.use_cases.reminders_list
 
 import com.example.locationreminder.cache.database.ReminderDao
 import com.example.locationreminder.cache.model.toReminderList
-import com.example.locationreminder.domain.DataState
-import com.example.locationreminder.domain.Reminder
+import com.example.locationreminder.domain.model.DataState
+import com.example.locationreminder.domain.model.Reminder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow

@@ -50,7 +50,7 @@
 
         <variable
             name="currentReminder"
-            type="com.example.locationreminder.domain.Reminder" />
+            type="com.example.locationreminder.domain.model.Reminder" />
 
         <variable
             name="clickListener"

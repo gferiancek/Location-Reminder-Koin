@@ -5,6 +5,7 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
+import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -27,6 +28,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.locationreminder.R
 import com.example.locationreminder.databinding.FragmentReminderEditBinding
+import com.example.locationreminder.domain.model.Reminder
+import com.example.locationreminder.domain.utils.GeofenceBroadcastReceiver
 import com.example.locationreminder.presentation.ui.reminders.reminders_edit.ReminderEditEvent.AddNewReminderEvent
 import com.example.locationreminder.presentation.ui.reminders.reminders_edit.ReminderEditEvent.EditCurrentReminderEvent
 import com.google.android.gms.common.api.ResolvableApiException
@@ -40,6 +43,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 
 @AndroidEntryPoint
@@ -54,6 +58,7 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
     private lateinit var geofencingClient: GeofencingClient
     private lateinit var geofenceSheet: BottomSheetBehavior<CardView>
     private var radiusAnimator = ValueAnimator()
+    private val zoomFloat = 15f
 
     /**
      * Launchers and helper function for checking location services/permissions and responding to the user's choice.
@@ -104,7 +109,7 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
         override fun onLocationResult(locationResult: LocationResult) {
             val lastLocation = locationResult.lastLocation
             val latLng = LatLng(lastLocation.latitude, lastLocation.longitude)
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomFloat))
             fusedLocationClient.removeLocationUpdates(this)
         }
     }
@@ -113,14 +118,20 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        geofencingClient = LocationServices.getGeofencingClient(requireContext())
         binding = DataBindingUtil.inflate(
             layoutInflater,
             R.layout.fragment_reminder_edit,
             container,
             false
         )
+        val reminder = requireArguments().getParcelable<Reminder>("currentReminder")!!
+        editViewModel.apply {
+            currentReminder = reminder
+            isEditing = reminder.title.isNotBlank()
+        }
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        geofencingClient = LocationServices.getGeofencingClient(requireContext())
+
         return binding.root
     }
 
@@ -130,7 +141,8 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             currentReminder = editViewModel.currentReminder
-            bottomSheet.currentReminder = editViewModel.currentReminder
+            bottomSheet.viewModel = editViewModel
+            bottomSheet.tvGeofenceRequestHeader
             fabSave.setOnClickListener { if (Build.VERSION.SDK_INT >= 29) requestBackgroundLocation() else saveReminder() }
             locationMap.onCreate(savedInstanceState)
             locationMap.getMapAsync(this@ReminderEditFragment)
@@ -166,10 +178,12 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
                             header.setCompoundDrawablesWithIntrinsicBounds(
                                 0, R.drawable.ic_baseline_expand_less_24, 0, 0
                             )
+                            header.setOnClickListener { state = STATE_COLLAPSED }
                         } else if (newState == STATE_COLLAPSED) {
                             header.setCompoundDrawablesWithIntrinsicBounds(
                                 0, R.drawable.ic_baseline_expand_up_24, 0, 0
                             )
+                            header.setOnClickListener { state = STATE_EXPANDED }
                         }
                     }
                 }
@@ -182,9 +196,13 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
 
     /**
      * Once the map is ready, we setup universal functionality in the MapView.  Location restricted features
-     * are set in the requestFineLocation() function and launcher.
+     * are set in the requestLocation() function and launcher.
      */
     override fun onMapReady(googleMap: GoogleMap) {
+        val latLng = LatLng(
+            editViewModel.currentReminder.latitude,
+            editViewModel.currentReminder.longitude
+        )
         map = googleMap.apply {
             setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(
@@ -192,36 +210,25 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
                     R.raw.map_style
                 )
             )
-            editViewModel.currentReminder.let { reminder ->
-                circleOverlay = MapUtils.createCircle(
-                    this,
-                    reminder.latLng,
-                    requireContext()
-                )
-                activeMarker = MapUtils.createMarker(
-                    this,
-                    reminder.latLng
-                )
-            }
             setOnMarkerClickListener {
-                geofenceSheet.state = when (geofenceSheet.state) {
-                    STATE_EXPANDED -> STATE_EXPANDED
-                    else -> STATE_COLLAPSED
+                if (geofenceSheet.state != STATE_EXPANDED) {
+                    geofenceSheet.state = STATE_COLLAPSED
                 }
                 true
             }
             setOnPoiClickListener { poi ->
-                respondToMapClickEvent(
-                    poi.latLng,
-                    poi.name
-                )
+                respondToMapClickEvent(poi.latLng, poi.name)
             }
             setOnMapLongClickListener { location ->
-                respondToMapClickEvent(
-                    LatLng(location.latitude, location.longitude),
-                    getString(R.string.dropped_pin)
-                )
+                respondToMapClickEvent(LatLng(location.latitude, location.longitude), "")
             }
+        }
+        circleOverlay = MapUtils.createCircle(map, latLng, requireContext())
+        activeMarker = MapUtils.createMarker(map, latLng)
+
+        if (editViewModel.currentReminder.title.isNotBlank()) {
+            addCircleAndMarker(latLng)
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomFloat))
         }
         // This requires circleOverlay to be initialized so it cannot be setup in onViewCreated.
         binding.bottomSheet.sliderSheetRadius.addOnChangeListener { _, value, _ ->
@@ -235,7 +242,11 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
      * Helper function to setup the map after receiving a click event.
      */
     private fun respondToMapClickEvent(latLng: LatLng, name: String) {
-        editViewModel.currentReminder.latLng = latLng
+        editViewModel.currentReminder.apply {
+            latitude = latLng.latitude
+            longitude = latLng.longitude
+        }
+
         if (circleOverlay.radius > 0 &&
             activeMarker.alpha > 0
         ) {
@@ -245,28 +256,28 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
             ).apply {
                 doOnEnd {
                     map.clear()
-                    circleOverlay = MapUtils.createCircle(map, latLng, requireContext())
-                    activeMarker = MapUtils.createMarker(map, latLng)
-                    MapUtils.createFadeInAnimation(
-                        circleOverlay,
-                        activeMarker,
-                        binding.bottomSheet.sliderSheetRadius.value
-                    ).start()
+                    addCircleAndMarker(latLng)
                 }
-                start()
-            }
+            }.start()
         } else {
-            circleOverlay = MapUtils.createCircle(map, latLng, requireContext())
-            activeMarker = MapUtils.createMarker(map, latLng)
-            MapUtils.createFadeInAnimation(
-                circleOverlay,
-                activeMarker,
-                binding.bottomSheet.sliderSheetRadius.value
-            ).start()
+            addCircleAndMarker(latLng)
         }
-        map.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomFloat))
         binding.bottomSheet.etSheetName.setText(name)
         geofenceSheet.state = STATE_COLLAPSED
+    }
+
+    /**
+     * Helper method that uses MapUtils to fade a marker and circle onto the map.
+     */
+    private fun addCircleAndMarker(latLng: LatLng) {
+        circleOverlay = MapUtils.createCircle(map, latLng, requireContext())
+        activeMarker = MapUtils.createMarker(map, latLng)
+        MapUtils.createFadeInAnimation(
+            circleOverlay,
+            activeMarker,
+            binding.bottomSheet.sliderSheetRadius.value
+        ).start()
     }
 
     /**
@@ -335,8 +346,10 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             when {
                 location != null -> {
-                    val latLng = LatLng(location.latitude, location.longitude)
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+                    if (!editViewModel.isEditing) {
+                        val latLng = LatLng(location.latitude, location.longitude)
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomFloat))
+                    }
                 }
                 else -> {
                     editViewModel.displayNewSnackbar(getString(R.string.fetching_location))
@@ -361,7 +374,19 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
         ) == PackageManager.PERMISSION_GRANTED
 
         when {
-            backgroundLocation -> saveReminder()
+            backgroundLocation -> {
+                geofencingClient.addGeofences(
+                    createGeofenceRequest(editViewModel.currentReminder.id),
+                    createGeofencePendingIntent()
+                ).run {
+                    addOnSuccessListener {
+                        saveReminder()
+                    }
+                    addOnFailureListener {
+                        editViewModel.displayNewSnackbar(getString(R.string.geofencing_request_failed))
+                    }
+                }
+            }
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_BACKGROUND_LOCATION) -> {
                 handleDeniedLocation()
             }
@@ -373,10 +398,44 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
      * Extracting out logic since it is used in 3 different places.
      */
     private fun saveReminder() {
-        when (editViewModel.currentReminder.id) {
-            0L -> editViewModel.onTriggerEvent(AddNewReminderEvent)
-            else -> editViewModel.onTriggerEvent(EditCurrentReminderEvent)
+        when (editViewModel.isEditing) {
+            true -> editViewModel.onTriggerEvent(EditCurrentReminderEvent)
+            false -> editViewModel.onTriggerEvent(AddNewReminderEvent)
         }
+    }
+
+    private fun createGeofenceRequest(geofenceId: String): GeofencingRequest {
+        val currentReminder = editViewModel.currentReminder
+        val transitionType = MapUtils.getTransitionConstant(currentReminder.transitionType)
+        val geofence = Geofence.Builder()
+            .setRequestId(geofenceId)
+            .setCircularRegion(
+                currentReminder.latitude,
+                currentReminder.longitude,
+                currentReminder.geofence_radius
+            ).setExpirationDuration(
+                MapUtils.convertExpirationToMs(
+                    currentReminder.expirationInterval,
+                    currentReminder.expirationDuration
+                )
+            ).setTransitionTypes(transitionType).apply {
+                if (transitionType == Geofence.GEOFENCE_TRANSITION_DWELL) setLoiteringDelay(30000)
+            }
+            .build()
+        return GeofencingRequest.Builder()
+            .setInitialTrigger(Geofence.GEOFENCE_TRANSITION_ENTER)
+            .addGeofence(geofence)
+            .build()
+    }
+
+    private fun createGeofencePendingIntent(): PendingIntent {
+        val geofencePendingIntent: PendingIntent by lazy {
+            val pendingIntentFlag =
+                if (Build.VERSION.SDK_INT >= 31) PendingIntent.FLAG_MUTABLE else PendingIntent.FLAG_UPDATE_CURRENT
+            val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
+            PendingIntent.getBroadcast(requireContext(), 0, intent, pendingIntentFlag)
+        }
+        return geofencePendingIntent
     }
 
     /**
