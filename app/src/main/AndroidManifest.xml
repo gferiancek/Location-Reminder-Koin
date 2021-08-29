@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.locationreminder">
+    package="com.udacity.project4">
 
     <application
-        android:name=".ReminderApplication"
+        android:name="com.udacity.project4.ReminderApplication"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LocationReminder">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name="com.udacity.project4.presentation.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +28,7 @@
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
-        <receiver android:name=".domain.utils.GeofenceBroadcastReceiver" />
+        <receiver android:name="com.udacity.project4.domain.utils.GeofenceBroadcastReceiver" />
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

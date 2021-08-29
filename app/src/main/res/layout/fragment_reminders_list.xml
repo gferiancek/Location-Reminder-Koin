@@ -68,6 +68,6 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="com.example.locationreminder.presentation.ui.reminders.reminders_list.RemindersListViewModel" />
+            type="com.udacity.project4.presentation.ui.reminders.reminders_list.RemindersListViewModel" />
     </data>
 </layout>

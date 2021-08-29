@@ -4,7 +4,7 @@
     <string name="reminders_fab_content_description">FAB to add a new location reminder.</string>
     <string name="reminders_no_data_iv_content_description">Image indicating no location reminders have been created.</string>
     <string name="reminder_title_hint">Study Hard</string>
-    <string name="reminder_description_hint">Pass project, knock Capstone out of the park!</string>
+    <string name="reminder_description_hint">Pass project, tackle capstone</string>
     <string name="fab_save">Save current reminder</string>
     <string name="label_add_reminder">Add Reminder</string>
     <string name="label_edit_reminder">Edit Reminder</string>

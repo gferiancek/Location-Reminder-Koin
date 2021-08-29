@@ -50,10 +50,10 @@
 
         <variable
             name="currentReminder"
-            type="com.example.locationreminder.domain.model.Reminder" />
+            type="com.udacity.project4.domain.model.Reminder" />
 
         <variable
             name="clickListener"
-            type="com.example.locationreminder.presentation.adapters.ReminderListener" />
+            type="com.udacity.project4.presentation.adapters.ReminderListener" />
     </data>
 </layout>

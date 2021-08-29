@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:455196430625:android:40d01abd1b6c864d1a6e60",
+        "mobilesdk_app_id": "1:455196430625:android:75073e82cf59b2d21a6e60",
         "android_client_info": {
-          "package_name": "com.example.locationreminder"
+          "package_name": "com.udacity.project4"
         }
       },
       "oauth_client": [
         {
-          "client_id": "455196430625-fekel8b2q5h7ivq26m20snoot1dln4j5.apps.googleusercontent.com",
+          "client_id": "455196430625-t57cm81hp6bldn8hc35brj1u6662tcb4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.locationreminder",
+            "package_name": "com.udacity.project4",
             "certificate_hash": "00af386d9b6631b58c587e7af2c67bab2e7f5e54"
           }
         },
@@ -28,7 +28,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyApRhatDgWy6tV11Po5xcaxwo8KK-mQkHk"
+          "current_key": "AIzaSyAfVcEfJYWde5fR9_u5IvKeOShW-sj8E-0"
         }
       ],
       "services": {
