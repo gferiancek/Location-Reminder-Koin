@@ -28,7 +28,9 @@
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
-        <receiver android:name="com.udacity.project4.domain.utils.GeofenceBroadcastReceiver" />
+        <receiver
+            android:name="com.udacity.project4.domain.utils.GeofenceBroadcastReceiver"
+            android:enabled="true" />
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

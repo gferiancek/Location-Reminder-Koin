@@ -431,7 +431,7 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
     private fun createGeofencePendingIntent(): PendingIntent {
         val geofencePendingIntent: PendingIntent by lazy {
             val pendingIntentFlag =
-                if (Build.VERSION.SDK_INT >= 31) PendingIntent.FLAG_MUTABLE else PendingIntent.FLAG_UPDATE_CURRENT
+                if (Build.VERSION.SDK_INT >= 31) PendingIntent.FLAG_IMMUTABLE else PendingIntent.FLAG_UPDATE_CURRENT
             val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
             PendingIntent.getBroadcast(requireContext(), 0, intent, pendingIntentFlag)
         }
