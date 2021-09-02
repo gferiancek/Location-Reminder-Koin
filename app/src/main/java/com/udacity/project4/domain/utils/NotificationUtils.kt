@@ -3,15 +3,16 @@ package com.udacity.project4.domain.utils
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
+import android.os.Bundle
 import androidx.core.app.NotificationCompat
+import androidx.navigation.NavDeepLinkBuilder
 import com.udacity.project4.R
 import com.udacity.project4.domain.model.Reminder
-import com.udacity.project4.presentation.MainActivity
+import com.udacity.project4.domain.receiver.DeleteBroadcastReceiver
 
 class NotificationUtils {
 
@@ -35,24 +36,41 @@ class NotificationUtils {
 }
 
 fun NotificationManager.sendGeofenceNotification(context: Context, reminder: Reminder) {
-    val pendingIntent = TaskStackBuilder.create(context).run {
-        addNextIntentWithParentStack(Intent(context, MainActivity::class.java))
-        getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE)
-    }
+    val bundle = Bundle()
+    bundle.putParcelable("currentReminder", reminder)
+    val pendingIntent = NavDeepLinkBuilder(context)
+        .setGraph(R.navigation.nav_graph)
+        .setDestination(R.id.reminderDetailFragment)
+        .setArguments(bundle)
+        .createPendingIntent()
 
+    val deleteIntent = Intent(context, DeleteBroadcastReceiver::class.java)
+    deleteIntent.putExtra("id", reminder.id)
+    val deletePendingIntent = PendingIntent.getBroadcast(
+        context,
+        0,
+        deleteIntent,
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+    )
 
-    val notificationBuilder = NotificationCompat.Builder(
+    val notification = NotificationCompat.Builder(
         context,
         context.getString(R.string.channel_geofence_id)
-    ).setStyle(
-        NotificationCompat.BigTextStyle()
-            .bigText(reminder.description)
-            .setBigContentTitle(reminder.title)
     ).setSmallIcon(R.drawable.ic_location_black)
         .setContentTitle(reminder.title)
-        .setContentText(reminder.description)
+        .setContentText(reminder.location_name)
+        .setStyle(
+            NotificationCompat.BigTextStyle()
+                .bigText(reminder.description)
+        )
         .setContentIntent(pendingIntent)
+        .addAction(
+            R.drawable.ic_baseline_delete_24,
+            context.getString(R.string.notification_delete),
+            deletePendingIntent
+        )
         .setAutoCancel(true)
+        .build()
 
-    notify(0, notificationBuilder.build())
+    notify(0, notification)
 }

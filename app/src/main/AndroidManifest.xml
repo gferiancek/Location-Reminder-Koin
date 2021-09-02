@@ -28,8 +28,12 @@
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
+
         <receiver
-            android:name="com.udacity.project4.domain.utils.GeofenceBroadcastReceiver"
+            android:name="com.udacity.project4.domain.receiver.GeofenceBroadcastReceiver"
+            android:enabled="true" />
+        <receiver
+            android:name=".domain.receiver.DeleteBroadcastReceiver"
             android:enabled="true" />
     </application>
 

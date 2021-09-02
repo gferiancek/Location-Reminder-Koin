@@ -17,6 +17,9 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
+            android:id="@+id/action_remindersListFragment_to_reminderDetailFragment"
+            app:destination="@id/reminderDetailFragment" />
+        <action
             android:id="@+id/action_remindersListFragment_to_loginFragment"
             app:destination="@id/loginFragment"
             app:popUpTo="@id/remindersListFragment"
@@ -45,5 +48,14 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/reminderDetailFragment"
+        android:name="com.udacity.project4.presentation.ui.reminders.detail.ReminderDetailFragment"
+        android:label="fragment_reminder_detail"
+        tools:layout="@layout/fragment_reminder_detail">
+        <argument
+            android:name="reminder"
+            app:argType="com.udacity.project4.domain.model.Reminder" />
     </fragment>
 </navigation>

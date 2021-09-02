@@ -41,6 +41,13 @@
     <string name="channel_geofence_name">GeofenceStatus</string>
     <string name="channel_geofence_id">GeofenceChannel</string>
     <string name="channel_geofence_description">Provides updates about triggered geofences</string>
+    <string name="notification_delete">Delete</string>
+    <string name="normal_map">Normal</string>
+    <string name="hybrid_map">Hybrid</string>
+    <string name="satellite_map">Satellite</string>
+    <string name="terrain_map">Terrain</string>
+    <string name="menu_map_type">Map Type</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string-array name="spinner_entries_intervals">
         <item>Never</item>
         <item>Minute(s)</item>
@@ -50,6 +57,7 @@
         <item>Month(s)</item>
         <item>Year(s)</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
     <string-array name="spinner_entries_transition_types">
         <item>Enter</item>
         <item>Exit</item>

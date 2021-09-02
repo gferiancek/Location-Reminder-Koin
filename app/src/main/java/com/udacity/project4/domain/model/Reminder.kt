@@ -16,13 +16,19 @@ data class Reminder(
     var latitude: Double = 0.0,
     var longitude: Double = 0.0,
     var location_name: String = "",
-    var geofence_radius: Float = 100f,
+    var geofence_radius: Float = 150f,
     private var _expiration_interval: Int = 0,
     private var _expiration_duration: Float = 1f,
-    private var _transitionType: Int = 3
+    var transition_type: Int = 3
 ) : BaseObservable(), Parcelable {
-    fun missingData(): Boolean = title.isBlank() || description.isBlank()
 
+    fun hasBlankTextFields(): Boolean = title.isBlank() ||
+            description.isBlank() ||
+            location_name.isBlank()
+
+    /**
+     * Three @Bindable getter/setters are used to notify the layout of changes so it can update.
+     */
     var expirationInterval: Int
         @Bindable get() = _expiration_interval
         set(value) {
@@ -35,13 +41,6 @@ data class Reminder(
         set(value) {
             _expiration_duration = value
             notifyPropertyChanged(BR.expirationDuration)
-        }
-
-    var transitionType: Int
-        @Bindable get() = _transitionType
-        set(value) {
-            _transitionType = value
-            notifyPropertyChanged(BR.transitionType)
         }
 }
 
@@ -56,6 +55,6 @@ fun Reminder.toReminderEntity(): ReminderEntity {
         geofence_radius = geofence_radius,
         expiration_interval = expirationInterval,
         expiration_duration = expirationDuration,
-        transition_type = transitionType
+        transition_type = transition_type
     )
 }

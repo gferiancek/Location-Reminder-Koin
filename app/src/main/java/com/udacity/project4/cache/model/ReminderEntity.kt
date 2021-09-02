@@ -30,7 +30,7 @@ fun ReminderEntity.toReminder(): Reminder {
         geofence_radius = geofence_radius,
         _expiration_interval = expiration_interval,
         _expiration_duration = expiration_duration,
-        _transitionType = transition_type
+        transition_type = transition_type
     )
 }
 

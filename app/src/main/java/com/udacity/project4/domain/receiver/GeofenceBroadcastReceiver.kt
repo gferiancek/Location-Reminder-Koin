@@ -1,23 +1,26 @@
-package com.udacity.project4.domain.utils
+package com.udacity.project4.domain.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.work.*
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingEvent
+import com.udacity.project4.domain.worker.GeofenceWorker
 
 class GeofenceBroadcastReceiver(
 ) : BroadcastReceiver() {
-    val TAG = "BroadcastReceiver"
+    private val TAG = "GeofenceBroadcastReceiver"
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d(TAG, "Receiver has fired")
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
         if (geofencingEvent.hasError()) {
             val error = GeofenceStatusCodes.getStatusCodeString(geofencingEvent.errorCode)
-            Log.d("BroadcastReceiver", error)
+            Log.d(TAG, error)
             return
         }
         val geofenceTransition = geofencingEvent.geofenceTransition
@@ -29,18 +32,17 @@ class GeofenceBroadcastReceiver(
             if (triggeringGeofence.isNotEmpty()) {
                 val workData = workDataOf(
                     "geofenceId" to triggeringGeofence[0].requestId,
+                    "geofenceTransition" to geofenceTransition
                 )
 
-                val geofenceWorkRequest: OneTimeWorkRequest =
-                    OneTimeWorkRequestBuilder<GeofenceWorker>()
-                        .setInputData(workData)
-                        .build()
+                val geofenceWorkRequest = OneTimeWorkRequestBuilder<GeofenceWorker>()
+                    .setInputData(workData)
+                    .build()
                 WorkManager.getInstance(context).enqueueUniqueWork(
                     "GeofenceLocationWorker",
                     ExistingWorkPolicy.REPLACE,
                     geofenceWorkRequest
                 )
-                Log.d(TAG, "Enqueued Unique Work")
             }
         }
     }

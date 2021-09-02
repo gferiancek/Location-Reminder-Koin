@@ -13,9 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -39,7 +37,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.udacity.project4.R
 import com.udacity.project4.databinding.FragmentReminderEditBinding
 import com.udacity.project4.domain.model.Reminder
-import com.udacity.project4.domain.utils.GeofenceBroadcastReceiver
+import com.udacity.project4.domain.receiver.GeofenceBroadcastReceiver
 import com.udacity.project4.presentation.ui.reminders.reminders_edit.ReminderEditEvent.AddNewReminderEvent
 import com.udacity.project4.presentation.ui.reminders.reminders_edit.ReminderEditEvent.EditCurrentReminderEvent
 import dagger.hilt.android.AndroidEntryPoint
@@ -132,6 +130,7 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         geofencingClient = LocationServices.getGeofencingClient(requireContext())
 
+        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -262,7 +261,7 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
         } else {
             addCircleAndMarker(latLng)
         }
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomFloat))
+        map.animateCamera(CameraUpdateFactory.newLatLng(latLng))
         binding.bottomSheet.etSheetName.setText(name)
         geofenceSheet.state = STATE_COLLAPSED
     }
@@ -374,23 +373,26 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
         ) == PackageManager.PERMISSION_GRANTED
 
         when {
-            backgroundLocation -> {
-                geofencingClient.addGeofences(
-                    createGeofenceRequest(editViewModel.currentReminder.id),
-                    createGeofencePendingIntent()
-                ).run {
-                    addOnSuccessListener {
-                        saveReminder()
-                    }
-                    addOnFailureListener {
-                        editViewModel.displayNewSnackbar(getString(R.string.geofencing_request_failed))
-                    }
-                }
-            }
+            backgroundLocation -> addGeofence()
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_BACKGROUND_LOCATION) -> {
                 handleDeniedLocation()
             }
             else -> backgroundLocationLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun addGeofence() {
+        geofencingClient.addGeofences(
+            createGeofenceRequest(editViewModel.currentReminder.id),
+            createGeofencePendingIntent()
+        ).run {
+            addOnSuccessListener {
+                saveReminder()
+            }
+            addOnFailureListener {
+                editViewModel.displayNewSnackbar(getString(R.string.geofencing_request_failed))
+            }
         }
     }
 
@@ -406,7 +408,7 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
 
     private fun createGeofenceRequest(geofenceId: String): GeofencingRequest {
         val currentReminder = editViewModel.currentReminder
-        val transitionType = MapUtils.getTransitionConstant(currentReminder.transitionType)
+        val transitionType = MapUtils.getTransitionConstant(currentReminder.transition_type)
         val geofence = Geofence.Builder()
             .setRequestId(geofenceId)
             .setCircularRegion(
@@ -414,7 +416,7 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
                 currentReminder.longitude,
                 currentReminder.geofence_radius
             ).setExpirationDuration(
-                MapUtils.convertExpirationToMs(
+                MapUtils.convertExpirationToMilli(
                     currentReminder.expirationInterval,
                     currentReminder.expirationDuration
                 )
@@ -423,6 +425,8 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
             }
             .build()
         return GeofencingRequest.Builder()
+            // InitialTrigger would normally be 0 so we don't alert the user if they're adding
+            // a geofence to their current location.  Setting it to enter to make testing easier.
             .setInitialTrigger(Geofence.GEOFENCE_TRANSITION_ENTER)
             .addGeofence(geofence)
             .build()
@@ -430,12 +434,39 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
 
     private fun createGeofencePendingIntent(): PendingIntent {
         val geofencePendingIntent: PendingIntent by lazy {
-            val pendingIntentFlag =
-                if (Build.VERSION.SDK_INT >= 31) PendingIntent.FLAG_IMMUTABLE else PendingIntent.FLAG_UPDATE_CURRENT
             val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
-            PendingIntent.getBroadcast(requireContext(), 0, intent, pendingIntentFlag)
+            PendingIntent.getBroadcast(
+                requireContext(),
+                0,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
         return geofencePendingIntent
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.map_options, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.normal_map -> {
+            map.mapType = GoogleMap.MAP_TYPE_NORMAL
+            true
+        }
+        R.id.hybrid_map -> {
+            map.mapType = GoogleMap.MAP_TYPE_HYBRID
+            true
+        }
+        R.id.satellite_map -> {
+            map.mapType = GoogleMap.MAP_TYPE_SATELLITE
+            true
+        }
+        R.id.terrain_map -> {
+            map.mapType = GoogleMap.MAP_TYPE_TERRAIN
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     /**

@@ -19,13 +19,13 @@ class AddReminderUseCase(
             emit(DataState.loading())
             when {
                 reminder.latitude == 0.0 && reminder.longitude == 0.0 -> {
-                    emit(DataState.error<Reminder>(message = "Please select a location on the map for your geofence"))
+                    emit(DataState.error(message = "Please select a location on the map for your geofence"))
                 }
-                reminder.transitionType == 3 -> {
-                    emit(DataState.error<Reminder>(message = "Please select a transition type"))
+                reminder.transition_type == 3 -> {
+                    emit(DataState.error(message = "Please select a transition type"))
                 }
-                reminder.missingData() -> {
-                    emit(DataState.error<Reminder>(message = "Please fill out all fields before submitting reminder"))
+                reminder.hasBlankTextFields() -> {
+                    emit(DataState.error(message = "Please fill out all text fields before submitting reminder"))
                 }
                 else -> {
                     reminderDao.insertReminder(reminder.toReminderEntity())
@@ -33,7 +33,7 @@ class AddReminderUseCase(
                 }
             }
         } catch (e: Exception) {
-            emit(DataState.error<Reminder>(message = e.message.toString()))
+            emit(DataState.error(message = e.message.toString()))
         }
     }
 }

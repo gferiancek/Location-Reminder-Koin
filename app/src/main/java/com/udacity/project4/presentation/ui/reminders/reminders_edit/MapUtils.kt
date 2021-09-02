@@ -79,7 +79,7 @@ object MapUtils {
         }
     }
 
-    fun convertExpirationToMs(interval: Int, duration: Float): Long {
+    fun convertExpirationToMilli(interval: Int, duration: Float): Long {
         val durationLong = (interval * duration).toLong()
         return when (interval) {
             1 -> TimeUnit.MINUTES.toMillis(durationLong)
@@ -106,7 +106,7 @@ object MapUtils {
             0 -> Geofence.GEOFENCE_TRANSITION_ENTER
             1 -> Geofence.GEOFENCE_TRANSITION_EXIT
             2 -> Geofence.GEOFENCE_TRANSITION_DWELL
-            else -> Geofence.GEOFENCE_TRANSITION_ENTER
+            else -> -1
         }
     }
 }

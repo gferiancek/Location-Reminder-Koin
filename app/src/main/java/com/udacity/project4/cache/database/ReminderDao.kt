@@ -20,5 +20,5 @@ interface ReminderDao {
     suspend fun getReminder(id: String): ReminderEntity
 
     @Query("DELETE FROM reminders WHERE id LIKE :id")
-    suspend fun deleteReminder(id: Long)
+    suspend fun deleteReminder(id: String)
 }
