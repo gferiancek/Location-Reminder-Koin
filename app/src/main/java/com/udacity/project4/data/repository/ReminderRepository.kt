@@ -1,29 +1,18 @@
 package com.udacity.project4.data.repository
 
-import com.udacity.project4.data.cache.database.ReminderDao
-import com.udacity.project4.data.cache.model.toReminder
+import com.udacity.project4.data.cache.model.ReminderEntity
 import com.udacity.project4.domain.model.Reminder
-import com.udacity.project4.domain.model.toReminderEntity
-import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
-class ReminderRepository @Inject constructor(
-    val reminderDao: ReminderDao
-) {
-    val reminderList = reminderDao.getAllReminders()
+interface ReminderRepository {
 
-    suspend fun insertReminder(reminder: Reminder) {
-        reminderDao.insertReminder(reminder.toReminderEntity())
-    }
+    val reminderList: Flow<List<ReminderEntity>>
 
-    suspend fun updateReminder(reminder: Reminder) {
-        reminderDao.updateReminder(reminder.toReminderEntity())
-    }
+    suspend fun insertReminder(reminder: Reminder)
 
-    suspend fun getReminder(id: String): Reminder {
-        return reminderDao.getReminder(id).toReminder()
-    }
+    suspend fun updateReminder(reminder: Reminder)
 
-    suspend fun deleteReminder(id: String) {
-        reminderDao.deleteReminder(id)
-    }
+    suspend fun getReminder(id: String): Reminder?
+
+    suspend fun deleteReminder(id: String)
 }

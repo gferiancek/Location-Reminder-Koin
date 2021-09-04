@@ -1,4 +1,4 @@
-package com.udacity.project4.domain.use_cases.reminders_list
+package com.udacity.project4.use_cases.reminders_list
 
 import com.udacity.project4.data.cache.model.toReminderList
 import com.udacity.project4.data.repository.ReminderRepository
@@ -13,12 +13,12 @@ class GetAllRemindersUseCase(
 ) {
     fun execute(): Flow<DataState<List<Reminder>>> = flow {
         try {
-            emit(DataState.loading())
+            emit(DataState.Loading())
             repository.reminderList.collect { reminders ->
-                emit(DataState.data(reminders.toReminderList()))
+                emit(DataState.Data(reminders.toReminderList()))
             }
         } catch (e: Exception) {
-            emit(DataState.error(message = e.message.toString()))
+            emit(DataState.Error(e.message.toString()))
         }
     }
 }

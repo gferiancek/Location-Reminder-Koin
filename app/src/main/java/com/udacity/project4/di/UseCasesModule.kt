@@ -1,9 +1,9 @@
 package com.udacity.project4.di
 
-import com.udacity.project4.data.repository.ReminderRepository
-import com.udacity.project4.domain.use_cases.reminders_edit.AddReminderUseCase
-import com.udacity.project4.domain.use_cases.reminders_edit.EditReminderUseCase
-import com.udacity.project4.domain.use_cases.reminders_list.GetAllRemindersUseCase
+import com.udacity.project4.data.repository.ReminderRepositoryImpl
+import com.udacity.project4.use_cases.reminders_edit.AddReminderUseCase
+import com.udacity.project4.use_cases.reminders_edit.EditReminderUseCase
+import com.udacity.project4.use_cases.reminders_list.GetAllRemindersUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,19 +16,19 @@ object UseCasesModule {
 
     @ViewModelScoped
     @Provides
-    fun provideAddReminder(repository: ReminderRepository): AddReminderUseCase {
+    fun provideAddReminder(repository: ReminderRepositoryImpl): AddReminderUseCase {
         return AddReminderUseCase(repository = repository)
     }
 
     @ViewModelScoped
     @Provides
-    fun provideGetAllReminders(repository: ReminderRepository): GetAllRemindersUseCase {
+    fun provideGetAllReminders(repository: ReminderRepositoryImpl): GetAllRemindersUseCase {
         return GetAllRemindersUseCase(repository = repository)
     }
 
     @ViewModelScoped
     @Provides
-    fun provideEditReminder(repository: ReminderRepository): EditReminderUseCase {
+    fun provideEditReminder(repository: ReminderRepositoryImpl): EditReminderUseCase {
         return EditReminderUseCase(repository = repository)
     }
 }

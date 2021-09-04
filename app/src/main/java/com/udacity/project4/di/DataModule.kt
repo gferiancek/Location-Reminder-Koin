@@ -4,7 +4,7 @@ import androidx.room.Room
 import com.udacity.project4.ReminderApplication
 import com.udacity.project4.data.cache.database.ReminderDao
 import com.udacity.project4.data.cache.database.ReminderDatabase
-import com.udacity.project4.data.repository.ReminderRepository
+import com.udacity.project4.data.repository.ReminderRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,7 +36,7 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideReminderRepository(dao: ReminderDao): ReminderRepository {
-        return ReminderRepository(dao)
+    fun provideReminderRepository(dao: ReminderDao): ReminderRepositoryImpl {
+        return ReminderRepositoryImpl(dao)
     }
 }

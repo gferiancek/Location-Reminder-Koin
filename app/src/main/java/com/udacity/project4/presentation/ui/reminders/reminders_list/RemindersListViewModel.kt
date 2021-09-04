@@ -3,9 +3,10 @@ package com.udacity.project4.presentation.ui.reminders.reminders_list
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.udacity.project4.domain.model.DataState
 import com.udacity.project4.domain.model.Reminder
-import com.udacity.project4.domain.use_cases.reminders_list.GetAllRemindersUseCase
 import com.udacity.project4.presentation.ui.reminders.reminders_list.RemindersListEvent.GetAllReminders
+import com.udacity.project4.use_cases.reminders_list.GetAllRemindersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
@@ -24,7 +25,7 @@ class RemindersListViewModel @Inject constructor(
         get() = _navigateToEditScreen
 
     private val _snackbarMessage = MutableLiveData<String>()
-    val snackbarData: MutableLiveData<String>
+    val snackbarMessage: MutableLiveData<String>
         get() = _snackbarMessage
 
     val remindersList = MutableLiveData<List<Reminder>>(listOf())
@@ -47,16 +48,18 @@ class RemindersListViewModel @Inject constructor(
 
     private fun getAllReminders() {
         getAllRemindersUseCase.execute().onEach { dataState ->
-            dataState.loading.let {
-                loading.value = true
-            }
-            dataState.data?.let {
-                remindersList.value = it
-                loading.value = false
-            }
-            dataState.error?.let {
-                _snackbarMessage.value = it
-                loading.value = false
+            when (dataState) {
+                is DataState.Loading -> loading.value = true
+                is DataState.Data -> {
+                    dataState.data?.let { list ->
+                        remindersList.value = list
+                        loading.value = false
+                    }
+                }
+                is DataState.Error -> {
+                    _snackbarMessage.value = dataState.message
+                    loading.value = false
+                }
             }
         }.launchIn(viewModelScope)
     }

@@ -6,7 +6,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.LocationServices
-import com.udacity.project4.data.repository.ReminderRepository
+import com.udacity.project4.data.repository.ReminderRepositoryImpl
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -14,7 +14,7 @@ import dagger.assisted.AssistedInject
 class DeleteWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    val repository: ReminderRepository,
+    val repository: ReminderRepositoryImpl,
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {

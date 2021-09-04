@@ -1,19 +1,16 @@
 package com.udacity.project4.domain.model
 
-data class DataState<out T>(
-    val data: T? = null,
-    val error: String? = null,
-    val loading: Boolean = false
-) {
-    companion object {
-        fun <T> data(data: T): DataState<T> {
-            return DataState(data = data)
-        }
+sealed class DataState<T> {
 
-        fun <T> error(message: String): DataState<T> {
-            return DataState(error = message)
-        }
+    data class Data<T>(
+        val data: T? = null
+    ) : DataState<T>()
 
-        fun <T> loading(): DataState<T> = DataState(loading = true)
-    }
+    data class Error<T>(
+        val message: String
+    ) : DataState<T>()
+
+    data class Loading<T>(
+        val loading: Boolean = true
+    ) : DataState<T>()
 }

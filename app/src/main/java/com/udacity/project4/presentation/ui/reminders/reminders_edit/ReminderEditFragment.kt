@@ -152,7 +152,11 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
                     if (message.equals(getString(R.string.no_transition_type))) {
                         geofenceSheet.state = STATE_EXPANDED
                     }
-                    val snackBar = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
+                    val snackBar = Snackbar.make(
+                        requireActivity().findViewById(R.id.nav_host_fragment),
+                        message,
+                        Snackbar.LENGTH_SHORT
+                    )
                     if (geofenceSheet.state == STATE_HIDDEN) {
                         snackBar.anchorView = binding.fabSave
                     }
@@ -351,7 +355,7 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
                     }
                 }
                 else -> {
-                    editViewModel.displayNewSnackbar(getString(R.string.fetching_location))
+                    editViewModel.onDisplayNewSnackbar(getString(R.string.fetching_location))
                     fusedLocationClient.requestLocationUpdates(
                         createLocationRequest(),
                         locationCallback,
@@ -391,7 +395,7 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
                 saveReminder()
             }
             addOnFailureListener {
-                editViewModel.displayNewSnackbar(getString(R.string.geofencing_request_failed))
+                editViewModel.onDisplayNewSnackbar(getString(R.string.geofencing_request_failed))
             }
         }
     }
@@ -420,23 +424,14 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
                     currentReminder.expirationInterval,
                     currentReminder.expirationDuration
                 )
-            )
-        when (transitionType) {
-            Geofence.GEOFENCE_TRANSITION_DWELL -> {
-                geofence
-                    .setTransitionTypes(transitionType)
-                    .setLoiteringDelay(30000)
-            }
-            else -> {
-                geofence
-                    .setTransitionTypes(transitionType)
-            }
-        }
+            ).setTransitionTypes(transitionType)
+            .setLoiteringDelay(30000)
+            .build()
         // InitialTrigger would normally be 0 so we don't alert the user if they're adding
         // a geofence to their current location.  Setting it to enter to make testing easier.
         return GeofencingRequest.Builder()
             .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
-            .addGeofence(geofence.build())
+            .addGeofence(geofence)
             .build()
     }
 

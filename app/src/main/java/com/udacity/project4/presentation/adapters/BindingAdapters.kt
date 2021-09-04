@@ -37,9 +37,9 @@ fun Slider.setSliderListeners(attrChange: InverseBindingListener) {
     }
 }
 
-@BindingAdapter("setCustomAdapter")
-fun Spinner.setCustomAdapter(enabled: Boolean) {
-    if (enabled) {
+@BindingAdapter(value = ["enableCustomAdapter", "android:selectedItemPosition"])
+fun Spinner.setCustomAdapter(enableCustomAdapter: Boolean, position: Int) {
+    if (enableCustomAdapter) {
         val transitionArray = resources.getStringArray(R.array.spinner_entries_transition_types)
         adapter = object : ArrayAdapter<String>(
             context,
@@ -49,6 +49,9 @@ fun Spinner.setCustomAdapter(enabled: Boolean) {
             override fun getCount(): Int {
                 return transitionArray.size - 1
             }
+        }
+        if (position == 3) {
+            setSelection(transitionArray.size - 1)
         }
     }
 }
