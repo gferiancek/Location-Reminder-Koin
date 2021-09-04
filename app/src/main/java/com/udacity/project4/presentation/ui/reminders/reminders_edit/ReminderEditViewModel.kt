@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.udacity.project4.domain.model.Reminder
 import com.udacity.project4.domain.use_cases.reminders_edit.AddReminderUseCase
 import com.udacity.project4.domain.use_cases.reminders_edit.EditReminderUseCase
-import com.udacity.project4.domain.use_cases.reminders_edit.RetrieveReminderUseCase
-import com.udacity.project4.presentation.ui.reminders.reminders_edit.ReminderEditEvent.*
+import com.udacity.project4.presentation.ui.reminders.reminders_edit.ReminderEditEvent.AddNewReminderEvent
+import com.udacity.project4.presentation.ui.reminders.reminders_edit.ReminderEditEvent.EditCurrentReminderEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
@@ -20,7 +20,6 @@ import javax.inject.Inject
 class ReminderEditViewModel @Inject constructor(
     private val addReminderUseCase: AddReminderUseCase,
     private val editReminderUseCase: EditReminderUseCase,
-    private val retrieveReminderUseCase: RetrieveReminderUseCase
 ) : ViewModel() {
 
     var currentReminder = Reminder()
@@ -44,8 +43,7 @@ class ReminderEditViewModel @Inject constructor(
                 when (event) {
                     is AddNewReminderEvent -> addReminder()
                     is EditCurrentReminderEvent -> editReminder()
-                    is RetrieveReminderEvent -> retrieveReminder(id = event.id)
-                    is DeleteCurrentReminderEvent -> deleteReminder(id = event.id)
+                    else -> _snackbarMessage.value = "Unknown event. Please try again."
                 }
             }
         }
@@ -76,21 +74,6 @@ class ReminderEditViewModel @Inject constructor(
                 _eventSuccess.value = false
             }
         }.launchIn(viewModelScope)
-    }
-
-    private fun retrieveReminder(id: String) {
-        retrieveReminderUseCase.execute(id).onEach { dataState ->
-            dataState.data?.let { data ->
-                currentReminder = data
-            }
-            dataState.error?.let { message ->
-                _snackbarMessage.value = message
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    private fun deleteReminder(id: Long) {
-        // execute DeleteReminderUseCase
     }
 
     fun onEventSuccessHandled() {

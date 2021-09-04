@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
-import com.udacity.project4.cache.model.ReminderEntity
+import com.udacity.project4.data.cache.model.ReminderEntity
 import kotlinx.parcelize.Parcelize
 import java.util.*
 

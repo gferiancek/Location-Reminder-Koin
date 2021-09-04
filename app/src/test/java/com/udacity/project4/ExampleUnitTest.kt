@@ -1,6 +1,6 @@
 package com.udacity.project4
 
-import org.junit.Assert.assertEquals
+import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 /**
@@ -10,7 +10,8 @@ import org.junit.Test
  */
 class ExampleUnitTest {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun `addition is correct`() {
+        val result = 2 + 2
+        assertThat(result).isEqualTo(4)
     }
 }

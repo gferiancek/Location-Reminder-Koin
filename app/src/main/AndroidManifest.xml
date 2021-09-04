@@ -23,7 +23,7 @@
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAfVcEfJYWde5fR9_u5IvKeOShW-sj8E-0" />
+            android:value="${MAPS_API_KEY}" />
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
@@ -31,7 +31,12 @@
 
         <receiver
             android:name="com.udacity.project4.domain.receiver.GeofenceBroadcastReceiver"
-            android:enabled="true" />
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.aol.android.geofence.ACTION_RECEIVE_GEOFENCE" />
+            </intent-filter>
+        </receiver>
         <receiver
             android:name=".domain.receiver.DeleteBroadcastReceiver"
             android:enabled="true" />

@@ -1,4 +1,4 @@
-package com.udacity.project4.cache.model
+package com.udacity.project4.data.cache.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

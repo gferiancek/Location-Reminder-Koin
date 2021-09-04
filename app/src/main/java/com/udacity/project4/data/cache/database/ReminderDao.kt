@@ -1,7 +1,7 @@
-package com.udacity.project4.cache.database
+package com.udacity.project4.data.cache.database
 
 import androidx.room.*
-import com.udacity.project4.cache.model.ReminderEntity
+import com.udacity.project4.data.cache.model.ReminderEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

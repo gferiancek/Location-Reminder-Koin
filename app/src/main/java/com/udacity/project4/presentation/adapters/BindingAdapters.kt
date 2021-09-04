@@ -50,7 +50,6 @@ fun Spinner.setCustomAdapter(enabled: Boolean) {
                 return transitionArray.size - 1
             }
         }
-        setSelection(transitionArray.size - 1)
     }
 }
 
@@ -60,4 +59,34 @@ fun TextView.setDuration(interval: Int, duration: Float) {
         0 -> ""
         else -> duration.toInt().toString()
     }
+}
+
+@BindingAdapter(value = ["interval", "duration", "shouldFormat"])
+fun TextView.setFormattedDuration(interval: Int, duration: Float, shouldFormat: Boolean) {
+    text = when (interval) {
+        0 -> "Never Expires"
+        1 -> "Expiration Interval: ${duration.toInt()} Minute(s)"
+        2 -> "Expiration Interval: ${duration.toInt()} Hour(s)"
+        3 -> "Expiration Interval: ${duration.toInt()} Day(s)"
+        4 -> "Expiration Interval: ${duration.toInt()} Week(s)"
+        5 -> "Expiration Interval: ${duration.toInt()} Month(s)"
+        else -> "Expiration Interval: ${duration.toInt()} Year(s)"
+    }
+}
+
+@BindingAdapter("formatTransition")
+fun TextView.setFormattedTransition(transitionType: Int) {
+    text = when (transitionType) {
+        0 -> "Transition Type: Enter"
+        1 -> "Transition Type: Exit"
+        else -> "Transition Type: Dwell"
+    }
+}
+
+@BindingAdapter(value = ["latitude", "longitude"])
+fun TextView.setFormattedLatLng(latitude: Double, longitude: Double) {
+    val formattedLatitude = String.format("%.3f", latitude)
+    val formattedLongitude = String.format("%.3f", longitude)
+    val formattedText = "$formattedLatitude, $formattedLongitude"
+    text = formattedText
 }

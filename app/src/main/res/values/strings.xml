@@ -57,7 +57,6 @@
         <item>Month(s)</item>
         <item>Year(s)</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
     <string-array name="spinner_entries_transition_types">
         <item>Enter</item>
         <item>Exit</item>

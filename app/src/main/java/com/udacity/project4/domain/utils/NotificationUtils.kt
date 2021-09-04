@@ -38,6 +38,7 @@ class NotificationUtils {
 fun NotificationManager.sendGeofenceNotification(context: Context, reminder: Reminder) {
     val bundle = Bundle()
     bundle.putParcelable("currentReminder", reminder)
+    bundle.putString("label", reminder.location_name)
     val pendingIntent = NavDeepLinkBuilder(context)
         .setGraph(R.navigation.nav_graph)
         .setDestination(R.id.reminderDetailFragment)

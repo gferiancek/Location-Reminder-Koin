@@ -420,26 +420,36 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
                     currentReminder.expirationInterval,
                     currentReminder.expirationDuration
                 )
-            ).setTransitionTypes(transitionType).apply {
-                if (transitionType == Geofence.GEOFENCE_TRANSITION_DWELL) setLoiteringDelay(30000)
+            )
+        when (transitionType) {
+            Geofence.GEOFENCE_TRANSITION_DWELL -> {
+                geofence
+                    .setTransitionTypes(transitionType)
+                    .setLoiteringDelay(30000)
             }
-            .build()
+            else -> {
+                geofence
+                    .setTransitionTypes(transitionType)
+            }
+        }
+        // InitialTrigger would normally be 0 so we don't alert the user if they're adding
+        // a geofence to their current location.  Setting it to enter to make testing easier.
         return GeofencingRequest.Builder()
-            // InitialTrigger would normally be 0 so we don't alert the user if they're adding
-            // a geofence to their current location.  Setting it to enter to make testing easier.
-            .setInitialTrigger(Geofence.GEOFENCE_TRANSITION_ENTER)
-            .addGeofence(geofence)
+            .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+            .addGeofence(geofence.build())
             .build()
     }
 
     private fun createGeofencePendingIntent(): PendingIntent {
         val geofencePendingIntent: PendingIntent by lazy {
             val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
+            val flags =
+                if (Build.VERSION.SDK_INT >= 31) PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT else PendingIntent.FLAG_UPDATE_CURRENT
             PendingIntent.getBroadcast(
                 requireContext(),
                 0,
                 intent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                flags
             )
         }
         return geofencePendingIntent

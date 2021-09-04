@@ -1,16 +1,14 @@
 package com.udacity.project4.domain.use_cases.reminders_edit
 
-import com.udacity.project4.cache.database.ReminderDao
-import com.udacity.project4.cache.model.toReminder
+import com.udacity.project4.data.repository.ReminderRepository
 import com.udacity.project4.domain.model.DataState
 import com.udacity.project4.domain.model.Reminder
-import com.udacity.project4.domain.model.toReminderEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 
 class AddReminderUseCase(
-    private val reminderDao: ReminderDao
+    private val repository: ReminderRepository
 ) {
     fun execute(
         reminder: Reminder
@@ -28,8 +26,8 @@ class AddReminderUseCase(
                     emit(DataState.error(message = "Please fill out all text fields before submitting reminder"))
                 }
                 else -> {
-                    reminderDao.insertReminder(reminder.toReminderEntity())
-                    emit(DataState.data(reminderDao.getReminder(reminder.id).toReminder()))
+                    repository.insertReminder(reminder)
+                    emit(DataState.data(repository.getReminder(reminder.id)))
                 }
             }
         } catch (e: Exception) {

@@ -52,10 +52,13 @@
     <fragment
         android:id="@+id/reminderDetailFragment"
         android:name="com.udacity.project4.presentation.ui.reminders.detail.ReminderDetailFragment"
-        android:label="fragment_reminder_detail"
+        android:label="{label}"
         tools:layout="@layout/fragment_reminder_detail">
         <argument
             android:name="reminder"
             app:argType="com.udacity.project4.domain.model.Reminder" />
+        <argument
+            android:name="label"
+            app:argType="string" />
     </fragment>
 </navigation>

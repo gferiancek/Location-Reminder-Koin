@@ -20,15 +20,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_normal"
-                android:layout_marginTop="@dimen/margin_normal"
-                android:layout_marginEnd="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_small"
                 android:text="@{currentReminder.title}"
+                android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_list_item_latlng"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_list_item_location" />
 
             <TextView
                 android:id="@+id/tv_list_item_description"
@@ -43,6 +42,29 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_list_item_title" />
+
+            <TextView
+                android:id="@+id/tv_list_item_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:gravity="end"
+                android:text="@{currentReminder.location_name}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_list_item_latlng"
+                latitude="@{currentReminder.latitude}"
+                longitude="@{currentReminder.longitude}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_list_item_location"
+                app:layout_constraintTop_toBottomOf="@+id/tv_list_item_location" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
