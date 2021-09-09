@@ -1,8 +1,8 @@
 package com.udacity.project4.data.repository
 
 import com.google.common.truth.Truth.assertThat
-import com.udacity.project4.data.cache.database.ReminderDaoFake
-import com.udacity.project4.data.cache.database.ReminderDatabaseFake
+import com.udacity.project4.data.cache.ReminderDaoFake
+import com.udacity.project4.data.cache.ReminderDatabaseFake
 import com.udacity.project4.data.cache.model.ReminderEntity
 import com.udacity.project4.domain.model.Reminder
 import kotlinx.coroutines.ExperimentalCoroutinesApi

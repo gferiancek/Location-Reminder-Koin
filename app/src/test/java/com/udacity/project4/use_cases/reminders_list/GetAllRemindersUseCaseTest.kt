@@ -1,8 +1,8 @@
 package com.udacity.project4.use_cases.reminders_list
 
 import com.google.common.truth.Truth.assertThat
-import com.udacity.project4.data.cache.database.ReminderDaoFake
-import com.udacity.project4.data.cache.database.ReminderDatabaseFake
+import com.udacity.project4.data.cache.ReminderDaoFake
+import com.udacity.project4.data.cache.ReminderDatabaseFake
 import com.udacity.project4.data.repository.ReminderRepositoryFake
 import com.udacity.project4.domain.model.DataState
 import com.udacity.project4.domain.model.Reminder

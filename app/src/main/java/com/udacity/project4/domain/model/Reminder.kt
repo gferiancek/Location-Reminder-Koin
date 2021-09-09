@@ -27,7 +27,7 @@ data class Reminder(
             location_name.isBlank()
 
     /**
-     * Three @Bindable getter/setters are used to notify the layout of changes so it can update.
+     * Two @Bindable getter/setters are used to notify the layout of changes so it can update.
      */
     var expirationInterval: Int
         @Bindable get() = _expiration_interval

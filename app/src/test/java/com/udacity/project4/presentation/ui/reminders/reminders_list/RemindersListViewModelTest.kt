@@ -2,8 +2,8 @@ package com.udacity.project4.presentation.ui.reminders.reminders_list
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
-import com.udacity.project4.data.cache.database.ReminderDaoFake
-import com.udacity.project4.data.cache.database.ReminderDatabaseFake
+import com.udacity.project4.data.cache.ReminderDaoFake
+import com.udacity.project4.data.cache.ReminderDatabaseFake
 import com.udacity.project4.data.repository.ReminderRepositoryFake
 import com.udacity.project4.domain.model.Reminder
 import com.udacity.project4.presentation.ui.getOrAwaitValue

@@ -9,7 +9,7 @@
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
         android:onClick="@{() -> clickListener.onClick(currentReminder)}"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="@dimen/corner_radius">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -23,7 +23,7 @@
                 android:layout_marginEnd="@dimen/margin_small"
                 android:text="@{currentReminder.title}"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="@dimen/title_text_size"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/tv_list_item_latlng"
                 app:layout_constraintStart_toStartOf="parent"
@@ -36,8 +36,8 @@
                 android:layout_marginStart="@dimen/margin_normal"
                 android:layout_marginEnd="@dimen/margin_normal"
                 android:layout_marginBottom="@dimen/margin_normal"
-                android:textColor="@color/black"
                 android:text="@{currentReminder.description}"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_normal"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/margin_small"
                 android:layout_marginEnd="@dimen/margin_normal"
                 android:gravity="end"
                 android:text="@{currentReminder.location_name}"
@@ -62,7 +62,7 @@
                 longitude="@{currentReminder.longitude}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="10sp"
+                android:textSize="@dimen/latlng_text_size"
                 app:layout_constraintEnd_toEndOf="@+id/tv_list_item_location"
                 app:layout_constraintTop_toBottomOf="@+id/tv_list_item_location" />
         </androidx.constraintlayout.widget.ConstraintLayout>

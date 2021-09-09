@@ -5,7 +5,6 @@ import com.udacity.project4.domain.model.Reminder
 import kotlinx.coroutines.flow.Flow
 
 interface ReminderRepository {
-
     val reminderList: Flow<List<ReminderEntity>>
 
     suspend fun insertReminder(reminder: Reminder)
@@ -15,4 +14,7 @@ interface ReminderRepository {
     suspend fun getReminder(id: String): Reminder?
 
     suspend fun deleteReminder(id: String)
+
+    suspend fun deleteAllReminder()
+
 }

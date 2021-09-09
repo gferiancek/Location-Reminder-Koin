@@ -41,19 +41,20 @@ class RemindersListFragment : androidx.fragment.app.Fragment() {
 
         remindersViewModel.navigateToEditScreen.observe(viewLifecycleOwner) { currentReminder ->
             currentReminder?.let {
-                val label =
-                    if (currentReminder.title.isBlank()) getString(R.string.label_add_reminder) else getString(
-                        R.string.label_edit_reminder
+                if (currentReminder.hasBlankTextFields()) {
+                    findNavController().navigate(
+                        RemindersListFragmentDirections.actionRemindersListFragmentToEditReminderFragment(
+                            getString(R.string.label_add_reminder)
+                        )
                     )
-                findNavController().navigate(
-                    RemindersListFragmentDirections.actionRemindersListFragmentToEditReminderFragment(
-                        // We use Two-Way DataBinding in the Edit Screen, so we send a copy of the reminder.
-                        // If we don't, then any changes get written all the way back to the database, even
-                        // if the user clicks the back button to cancel editing the reminder.
-                        currentReminder.copy(),
-                        label
-                    )
-                )
+                } else {
+                    val action =
+                        RemindersListFragmentDirections.actionRemindersListFragmentToEditReminderFragment(
+                            getString(R.string.label_edit_reminder)
+                        )
+                    action.currentReminder = currentReminder.copy()
+                    findNavController().navigate(action)
+                }
                 remindersViewModel.onNavigateToEditScreenFinished()
             }
         }

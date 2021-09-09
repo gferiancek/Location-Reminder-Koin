@@ -5,4 +5,12 @@
     <dimen name="margin_small">8dp</dimen>
     <dimen name="margin_large">32dp</dimen>
     <dimen name="sheet_header_padding">32dp</dimen>
+    <dimen name="sheet_peek_height">224dp</dimen>
+    <dimen name="touch_target_min_height">48dp</dimen>
+    <dimen name="padding_normal">8dp</dimen>
+    <dimen name="header_text_size">18sp</dimen>
+    <dimen name="label_text_size">16sp</dimen>
+    <dimen name="corner_radius">10dp</dimen>
+    <dimen name="title_text_size">24sp</dimen>
+    <dimen name="latlng_text_size">11sp</dimen>
 </resources>

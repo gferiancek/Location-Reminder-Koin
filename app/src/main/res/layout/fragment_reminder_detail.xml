@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:map="http://schemas.android.com/apk/res-auto">
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/margin_small"
-        app:cardCornerRadius="20dp"
+        app:cardCornerRadius="@dimen/corner_radius"
         tools:context=".presentation.ui.reminders.detail.ReminderDetailFragment">
 
 
@@ -25,7 +25,7 @@
                 android:layout_marginEnd="@dimen/margin_normal"
                 android:text="@{reminder.title}"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="@dimen/header_text_size"
                 app:layout_constraintBottom_toTopOf="@id/mv_detail_map"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

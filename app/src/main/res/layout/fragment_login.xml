@@ -7,11 +7,5 @@
         android:layout_height="match_parent"
         android:background="@drawable/map_background"
         tools:context=".presentation.ui.login.LoginFragment">
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <data>
-
-    </data>
 </layout>

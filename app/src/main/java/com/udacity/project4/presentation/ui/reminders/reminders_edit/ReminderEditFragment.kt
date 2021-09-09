@@ -122,10 +122,12 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
             container,
             false
         )
-        val reminder = requireArguments().getParcelable<Reminder>("currentReminder")!!
-        editViewModel.apply {
-            currentReminder = reminder
-            isEditing = reminder.title.isNotBlank()
+        val reminder = requireArguments().getParcelable<Reminder>("currentReminder")
+        if (reminder != null) {
+            editViewModel.apply {
+                currentReminder = reminder
+                isEditing = true
+            }
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         geofencingClient = LocationServices.getGeofencingClient(requireContext())
@@ -143,8 +145,8 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
             bottomSheet.viewModel = editViewModel
             bottomSheet.tvGeofenceRequestHeader
             fabSave.setOnClickListener { if (Build.VERSION.SDK_INT >= 29) requestBackgroundLocation() else saveReminder() }
-            locationMap.onCreate(savedInstanceState)
-            locationMap.getMapAsync(this@ReminderEditFragment)
+            mvReminderLocationMap.onCreate(savedInstanceState)
+            mvReminderLocationMap.getMapAsync(this@ReminderEditFragment)
         }
         editViewModel.apply {
             snackbarMessage.observe(viewLifecycleOwner) { message ->
@@ -153,7 +155,7 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
                         geofenceSheet.state = STATE_EXPANDED
                     }
                     val snackBar = Snackbar.make(
-                        requireActivity().findViewById(R.id.nav_host_fragment),
+                        binding.clEdit,
                         message,
                         Snackbar.LENGTH_SHORT
                     )
@@ -167,7 +169,7 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
             }
             eventSuccess.observe(viewLifecycleOwner) { isSuccessful ->
                 if (isSuccessful) {
-                    findNavController().popBackStack()
+                    findNavController().navigate(ReminderEditFragmentDirections.actionEditReminderFragmentToRemindersListFragment())
                     editViewModel.onEventSuccessHandled()
                 }
             }
@@ -430,7 +432,7 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
         // InitialTrigger would normally be 0 so we don't alert the user if they're adding
         // a geofence to their current location.  Setting it to enter to make testing easier.
         return GeofencingRequest.Builder()
-            .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+            .setInitialTrigger(0)
             .addGeofence(geofence)
             .build()
     }
@@ -480,38 +482,38 @@ class ReminderEditFragment : Fragment(), OnMapReadyCallback {
      * onCreateView()
      */
     override fun onResume() {
-        binding.locationMap.onResume()
+        binding.mvReminderLocationMap.onResume()
         super.onResume()
     }
 
     override fun onPause() {
-        binding.locationMap.onPause()
+        binding.mvReminderLocationMap.onPause()
         fusedLocationClient.removeLocationUpdates(locationCallback)
         super.onPause()
     }
 
     override fun onDestroy() {
-        binding.locationMap.onDestroy()
+        binding.mvReminderLocationMap.onDestroy()
         super.onDestroy()
     }
 
     override fun onLowMemory() {
-        binding.locationMap.onLowMemory()
+        binding.mvReminderLocationMap.onLowMemory()
         super.onLowMemory()
     }
 
     override fun onStart() {
-        binding.locationMap.onStart()
+        binding.mvReminderLocationMap.onStart()
         super.onStart()
     }
 
     override fun onStop() {
-        binding.locationMap.onStop()
+        binding.mvReminderLocationMap.onStop()
         super.onStop()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        binding.locationMap.onSaveInstanceState(outState)
+        binding.mvReminderLocationMap.onSaveInstanceState(outState)
         super.onSaveInstanceState(outState)
     }
 }

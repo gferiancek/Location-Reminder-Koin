@@ -9,7 +9,6 @@ import javax.inject.Inject
 class ReminderRepositoryImpl @Inject constructor(
     val reminderDao: ReminderDao
 ) : ReminderRepository {
-
     override val reminderList = reminderDao.getAllReminders()
 
     override suspend fun insertReminder(reminder: Reminder) {
@@ -26,5 +25,9 @@ class ReminderRepositoryImpl @Inject constructor(
 
     override suspend fun deleteReminder(id: String) {
         reminderDao.deleteReminder(id)
+    }
+
+    override suspend fun deleteAllReminder() {
+        reminderDao.deleteAllReminders()
     }
 }

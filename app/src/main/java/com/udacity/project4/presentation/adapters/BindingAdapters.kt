@@ -66,14 +66,16 @@ fun TextView.setDuration(interval: Int, duration: Float) {
 
 @BindingAdapter(value = ["interval", "duration", "shouldFormat"])
 fun TextView.setFormattedDuration(interval: Int, duration: Float, shouldFormat: Boolean) {
-    text = when (interval) {
-        0 -> "Never Expires"
-        1 -> "Expiration Interval: ${duration.toInt()} Minute(s)"
-        2 -> "Expiration Interval: ${duration.toInt()} Hour(s)"
-        3 -> "Expiration Interval: ${duration.toInt()} Day(s)"
-        4 -> "Expiration Interval: ${duration.toInt()} Week(s)"
-        5 -> "Expiration Interval: ${duration.toInt()} Month(s)"
-        else -> "Expiration Interval: ${duration.toInt()} Year(s)"
+    if (shouldFormat) {
+        text = when (interval) {
+            0 -> "Never Expires"
+            1 -> "Expiration Interval: ${duration.toInt()} Minute(s)"
+            2 -> "Expiration Interval: ${duration.toInt()} Hour(s)"
+            3 -> "Expiration Interval: ${duration.toInt()} Day(s)"
+            4 -> "Expiration Interval: ${duration.toInt()} Week(s)"
+            5 -> "Expiration Interval: ${duration.toInt()} Month(s)"
+            else -> "Expiration Interval: ${duration.toInt()} Year(s)"
+        }
     }
 }
 

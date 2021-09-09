@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.6026041666666667" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/drawable/ic_baseline_check_24.xml" value="0.6026041666666667" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.6026041666666667" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/drawable/ic_baseline_expand_less_24.xml" value="0.6026041666666667" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/drawable/ic_baseline_not_listed_location_24.xml" value="0.6026041666666667" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.6026041666666667" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/drawable/ic_location_black.xml" value="0.6026041666666667" />
@@ -11,7 +15,7 @@
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/activity_main.xml" value="0.5774358974358974" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/bottom_sheet_location_persistent.xml" value="0.5313827277017461" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_edit_reminder.xml" value="0.1" />
-        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_login.xml" value="0.5635897435897436" />
+        <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_login.xml" value="0.21875" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_reminder_detail.xml" value="0.4601851851851852" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_reminder_edit.xml" value="0.4539130434782609" />
         <entry key="..\:/ADND-Kotlin/LocationReminder/app/src/main/res/layout/fragment_reminders_list.xml" value="0.5" />

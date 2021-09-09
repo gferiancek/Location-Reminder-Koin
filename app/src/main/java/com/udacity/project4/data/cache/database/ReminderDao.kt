@@ -11,7 +11,7 @@ interface ReminderDao {
     suspend fun insertReminder(reminder: ReminderEntity)
 
     @Update
-    suspend fun updateReminder(reminder: ReminderEntity)
+    suspend fun updateReminder(reminder: ReminderEntity): Int
 
     @Query("SELECT * FROM reminders ORDER BY id ASC")
     fun getAllReminders(): Flow<List<ReminderEntity>>
@@ -21,4 +21,8 @@ interface ReminderDao {
 
     @Query("DELETE FROM reminders WHERE id LIKE :id")
     suspend fun deleteReminder(id: String)
+
+    @Query("DELETE FROM reminders")
+    suspend fun deleteAllReminders()
+
 }

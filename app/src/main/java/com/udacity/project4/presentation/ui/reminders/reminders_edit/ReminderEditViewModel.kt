@@ -41,7 +41,6 @@ class ReminderEditViewModel @Inject constructor(
                 when (event) {
                     is AddNewReminderEvent -> addReminder()
                     is EditCurrentReminderEvent -> editReminder()
-                    else -> _snackbarMessage.value = "Unknown event. Please try again."
                 }
             }
         }
@@ -51,8 +50,7 @@ class ReminderEditViewModel @Inject constructor(
         addReminderUseCase.execute(currentReminder).onEach { dataState ->
             when (dataState) {
                 is DataState.Data -> {
-                    dataState.data?.let { reminder ->
-                        _snackbarMessage.value = "Successfully added ${reminder.title} reminder"
+                    dataState.data?.let {
                         _eventSuccess.value = true
                     }
                 }
@@ -69,8 +67,7 @@ class ReminderEditViewModel @Inject constructor(
         editReminderUseCase.execute(currentReminder).onEach { dataState ->
             when (dataState) {
                 is DataState.Data -> {
-                    dataState.data?.let { data ->
-                        _snackbarMessage.value = "Successfully updated the ${data.title} reminder"
+                    dataState.data?.let {
                         _eventSuccess.value = true
                     }
                 }
