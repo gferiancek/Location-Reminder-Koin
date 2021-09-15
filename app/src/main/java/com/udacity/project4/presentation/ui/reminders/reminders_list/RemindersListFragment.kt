@@ -3,7 +3,6 @@ package com.udacity.project4.presentation.ui.reminders.reminders_list
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
 import com.udacity.project4.R
@@ -12,12 +11,11 @@ import com.udacity.project4.domain.model.Reminder
 import com.udacity.project4.domain.utils.NotificationUtils
 import com.udacity.project4.presentation.adapters.ReminderAdapter
 import com.udacity.project4.presentation.adapters.ReminderListener
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.android.ext.android.inject
 
-@AndroidEntryPoint
 class RemindersListFragment : androidx.fragment.app.Fragment() {
 
-    private val remindersViewModel: RemindersListViewModel by viewModels()
+    private val remindersViewModel: RemindersListViewModel by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

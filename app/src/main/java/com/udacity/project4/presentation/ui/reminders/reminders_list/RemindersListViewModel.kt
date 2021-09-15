@@ -7,16 +7,13 @@ import com.udacity.project4.domain.model.DataState
 import com.udacity.project4.domain.model.Reminder
 import com.udacity.project4.presentation.ui.reminders.reminders_list.RemindersListEvent.GetAllReminders
 import com.udacity.project4.use_cases.reminders_list.GetAllRemindersUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-@HiltViewModel
-class RemindersListViewModel @Inject constructor(
+class RemindersListViewModel(
     private val getAllRemindersUseCase: GetAllRemindersUseCase
 ) : ViewModel() {
 

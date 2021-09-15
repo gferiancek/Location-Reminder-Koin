@@ -4,6 +4,7 @@ import com.udacity.project4.data.cache.database.ReminderDao
 import com.udacity.project4.data.cache.model.toReminder
 import com.udacity.project4.domain.model.Reminder
 import com.udacity.project4.domain.model.toReminderEntity
+import com.udacity.project4.util.wrapEspressoIdlingResource
 import javax.inject.Inject
 
 class ReminderRepositoryImpl @Inject constructor(
@@ -12,22 +13,32 @@ class ReminderRepositoryImpl @Inject constructor(
     override val reminderList = reminderDao.getAllReminders()
 
     override suspend fun insertReminder(reminder: Reminder) {
-        reminderDao.insertReminder(reminder.toReminderEntity())
+        wrapEspressoIdlingResource {
+            reminderDao.insertReminder(reminder.toReminderEntity())
+        }
     }
 
     override suspend fun updateReminder(reminder: Reminder) {
-        reminderDao.updateReminder(reminder.toReminderEntity())
+        wrapEspressoIdlingResource {
+            reminderDao.updateReminder(reminder.toReminderEntity())
+        }
     }
 
     override suspend fun getReminder(id: String): Reminder? {
-        return reminderDao.getReminder(id)?.toReminder()
+        wrapEspressoIdlingResource {
+            return reminderDao.getReminder(id)?.toReminder()
+        }
     }
 
     override suspend fun deleteReminder(id: String) {
-        reminderDao.deleteReminder(id)
+        wrapEspressoIdlingResource {
+            reminderDao.deleteReminder(id)
+        }
     }
 
     override suspend fun deleteAllReminder() {
-        reminderDao.deleteAllReminders()
+        wrapEspressoIdlingResource {
+            reminderDao.deleteAllReminders()
+        }
     }
 }

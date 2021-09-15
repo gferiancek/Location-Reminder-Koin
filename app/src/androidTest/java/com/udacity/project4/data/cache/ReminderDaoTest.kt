@@ -9,8 +9,6 @@ import com.udacity.project4.data.cache.model.toReminder
 import com.udacity.project4.data.cache.model.toReminderList
 import com.udacity.project4.domain.model.Reminder
 import com.udacity.project4.domain.model.toReminderEntity
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runBlockingTest
@@ -21,11 +19,7 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @SmallTest
-@HiltAndroidTest
 class ReminderDaoTest {
-
-    @get: Rule
-    var hiltRule = HiltAndroidRule(this)
 
     @get: Rule
     var instantExecutorRule = InstantTaskExecutorRule()
@@ -41,7 +35,6 @@ class ReminderDaoTest {
 
     @Before
     fun setup() {
-        hiltRule.inject()
         reminder = Reminder(
             title = "Study Hard",
             description = "Submit Project and pass, then tackle Capstone",

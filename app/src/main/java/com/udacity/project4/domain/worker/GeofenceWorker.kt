@@ -2,20 +2,16 @@ package com.udacity.project4.domain.worker
 
 import android.app.NotificationManager
 import android.content.Context
-import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.udacity.project4.data.repository.ReminderRepositoryImpl
+import com.udacity.project4.data.repository.ReminderRepository
 import com.udacity.project4.domain.utils.sendGeofenceNotification
 import com.udacity.project4.presentation.ui.reminders.reminders_edit.MapUtils
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 
-@HiltWorker
-class GeofenceWorker @AssistedInject constructor(
-    @Assisted appContext: Context,
-    @Assisted workerParams: WorkerParameters,
-    val repository: ReminderRepositoryImpl,
+class GeofenceWorker(
+    appContext: Context,
+    workerParams: WorkerParameters,
+    val repository: ReminderRepository,
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {

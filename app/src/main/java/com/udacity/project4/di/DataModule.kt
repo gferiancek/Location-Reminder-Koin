@@ -1,44 +1,31 @@
 package com.udacity.project4.di
 
-import android.content.Context
+import android.app.Application
 import androidx.room.Room
 import com.udacity.project4.data.cache.database.ReminderDao
 import com.udacity.project4.data.cache.database.ReminderDatabase
 import com.udacity.project4.data.repository.ReminderRepository
 import com.udacity.project4.data.repository.ReminderRepositoryImpl
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import org.koin.android.ext.koin.androidApplication
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object DataModule {
+val dataModule = module {
 
-    @Singleton
-    @Provides
-    fun provideDatabase(@ApplicationContext app: Context): ReminderDatabase {
-        return Room
-            .databaseBuilder(
-                app,
-                ReminderDatabase::class.java,
-                ReminderDatabase.DATABASE_NAME
-            )
+    fun provideDatabase(app: Application): ReminderDatabase {
+        return Room.databaseBuilder(
+            app,
+            ReminderDatabase::class.java,
+            ReminderDatabase.DATABASE_NAME
+        )
             .fallbackToDestructiveMigration()
             .build()
     }
 
-    @Singleton
-    @Provides
     fun provideReminderDao(database: ReminderDatabase): ReminderDao {
         return database.reminderDao()
     }
 
-    @Singleton
-    @Provides
-    fun provideReminderRepository(dao: ReminderDao): ReminderRepository {
-        return ReminderRepositoryImpl(dao)
-    }
+    single { provideDatabase(androidApplication()) }
+    single { provideReminderDao(get()) }
+    single<ReminderRepository> { ReminderRepositoryImpl(get()) }
 }

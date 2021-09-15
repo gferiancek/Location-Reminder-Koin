@@ -3,18 +3,35 @@ package com.udacity.project4.presentation.ui.reminders.detail
 import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.udacity.project4.R
 import com.udacity.project4.domain.model.Reminder
+import com.udacity.project4.util.DataBindingIdlingResource
+import com.udacity.project4.util.monitorFragment
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
 class ReminderDetailFragmentTest {
+
+    private val dataBindingIdlingResource = DataBindingIdlingResource()
+
+    @Before
+    fun setup() {
+        IdlingRegistry.getInstance().register(dataBindingIdlingResource)
+    }
+
+    @After
+    fun tearDown() {
+        IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
+    }
 
     @Test
     fun bundledReminderDetails_DisplayedInUi() {
@@ -36,7 +53,12 @@ class ReminderDetailFragmentTest {
             putParcelable("currentReminder", reminder)
             putString("label", reminder.location_name)
         }
-        launchFragmentInContainer<ReminderDetailFragment>(bundle, R.style.Theme_LocationReminder)
+
+        val scenario = launchFragmentInContainer<ReminderDetailFragment>(
+            bundle,
+            R.style.Theme_LocationReminder
+        )
+        dataBindingIdlingResource.monitorFragment(scenario)
 
         // Then verify the UI matches the above details
         onView(withId(R.id.tv_detail_title))

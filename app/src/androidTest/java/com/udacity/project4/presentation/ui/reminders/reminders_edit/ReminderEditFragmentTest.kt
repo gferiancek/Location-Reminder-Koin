@@ -1,6 +1,7 @@
 package com.udacity.project4.presentation.ui.reminders.reminders_edit
 
 import android.os.Bundle
+import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso.onData
@@ -8,30 +9,34 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.udacity.project4.R
-import com.udacity.project4.launchFragmentInHiltContainer
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
+import com.udacity.project4.di.dataModuleFake
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.hamcrest.Matchers.`is`
+import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.koin.core.context.loadKoinModules
+import org.koin.core.context.unloadKoinModules
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
 @ExperimentalCoroutinesApi
-@HiltAndroidTest
+@RunWith(AndroidJUnit4::class)
 @MediumTest
 class ReminderEditFragmentTest {
 
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
     @Before
     fun setup() {
-        hiltRule.inject()
+        loadKoinModules(dataModuleFake)
+    }
+
+    @After
+    fun tearDown() {
+        unloadKoinModules(dataModuleFake)
     }
 
     @Test
@@ -41,8 +46,11 @@ class ReminderEditFragmentTest {
         val bundle = Bundle().apply {
             putString("label", "Add Reminder")
         }
-        launchFragmentInHiltContainer<ReminderEditFragment>(fragmentArgs = bundle) {
-            Navigation.setViewNavController(requireView(), navController)
+        val scenario = launchFragmentInContainer<ReminderEditFragment>(
+            fragmentArgs = bundle, R.style.Theme_LocationReminder
+        )
+        scenario.onFragment {
+            Navigation.setViewNavController(it.view!!, navController)
         }
 
         onView(withId(R.id.fab_save)).perform(click())
@@ -58,8 +66,12 @@ class ReminderEditFragmentTest {
         val bundle = Bundle().apply {
             putString("label", "Add Reminder")
         }
-        launchFragmentInHiltContainer<ReminderEditFragment>(fragmentArgs = bundle) {
-            Navigation.setViewNavController(requireView(), navController)
+
+        val scenario = launchFragmentInContainer<ReminderEditFragment>(
+            fragmentArgs = bundle, R.style.Theme_LocationReminder
+        )
+        scenario.onFragment {
+            Navigation.setViewNavController(it.view!!, navController)
         }
 
         onView(withId(R.id.mv_reminder_location_map)).perform(longClick())
@@ -77,8 +89,11 @@ class ReminderEditFragmentTest {
         val bundle = Bundle().apply {
             putString("label", "Add Reminder")
         }
-        launchFragmentInHiltContainer<ReminderEditFragment>(fragmentArgs = bundle) {
-            Navigation.setViewNavController(requireView(), navController)
+        val scenario = launchFragmentInContainer<ReminderEditFragment>(
+            fragmentArgs = bundle, R.style.Theme_LocationReminder
+        )
+        scenario.onFragment {
+            Navigation.setViewNavController(it.view!!, navController)
         }
 
         onView(withId(R.id.mv_reminder_location_map)).perform(longClick())
@@ -97,10 +112,13 @@ class ReminderEditFragmentTest {
         val bundle = Bundle().apply {
             putString("label", "Add Reminder")
         }
-        launchFragmentInHiltContainer<ReminderEditFragment>(fragmentArgs = bundle) {
-            Navigation.setViewNavController(requireView(), navController)
-        }
 
+        val scenario = launchFragmentInContainer<ReminderEditFragment>(
+            fragmentArgs = bundle, R.style.Theme_LocationReminder
+        )
+        scenario.onFragment {
+            Navigation.setViewNavController(it.view!!, navController)
+        }
         onView(withId(R.id.et_reminder_title)).perform(typeText("Title"))
         onView(withId(R.id.et_reminder_description)).perform(
             typeText("Description"),

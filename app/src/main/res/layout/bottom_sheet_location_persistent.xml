@@ -7,6 +7,7 @@
         style="@style/CustomCardViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:focusable="true"
         app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/sheet_peek_height"

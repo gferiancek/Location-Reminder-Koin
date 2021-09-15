@@ -22,7 +22,6 @@ import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -40,14 +39,12 @@ import com.udacity.project4.domain.model.Reminder
 import com.udacity.project4.domain.receiver.GeofenceBroadcastReceiver
 import com.udacity.project4.presentation.ui.reminders.reminders_edit.ReminderEditEvent.AddNewReminderEvent
 import com.udacity.project4.presentation.ui.reminders.reminders_edit.ReminderEditEvent.EditCurrentReminderEvent
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.android.ext.android.inject
 import java.util.*
 
-
-@AndroidEntryPoint
 class ReminderEditFragment : Fragment(), OnMapReadyCallback {
 
-    private val editViewModel: ReminderEditViewModel by viewModels()
+    private val editViewModel: ReminderEditViewModel by inject()
     private lateinit var map: GoogleMap
     private lateinit var circleOverlay: Circle
     private lateinit var activeMarker: Marker
