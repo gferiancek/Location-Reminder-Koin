@@ -142,5 +142,7 @@ class MainActivityTest : KoinTest {
         onView(withId(R.id.fab_save)).perform(click())
 
         onView(withId(R.id.tv_list_item_title)).check(matches(withText(reminder.title + " - Edited")))
+
+        scenario.close()
     }
 }
